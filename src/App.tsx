@@ -1,11 +1,40 @@
-import { useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Blank from './pages/Blank';
+import { apiEndpoint } from "./constantsGlob";
 import UploadContentPage from './pages/UploadContentPage';
 import './index.css';
 
 function App() {
-    useEffect(() => {}, []);
+    const [apiToken, setApiToken] = useState('');
+
+    useEffect(() => {
+        if (window.Telegram && window.Telegram.WebApp) {
+            fetch(`${apiEndpoint}/auth.twa`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "twa_data": window.Telegram.WebApp.initData
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('There was a problem with your fetch operation:', error);
+            });
+        } else {
+          console.log("Telegram WebApp not found");
+        }
+    }, []);
     return (
         <div className="App">
             <Router>
