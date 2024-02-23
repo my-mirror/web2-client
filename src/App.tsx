@@ -10,6 +10,8 @@ function App() {
 
     useEffect(() => {
         if (window.Telegram && window.Telegram.WebApp) {
+            console.log(`Requesting API token from ${apiEndpoint}/auth.twa`);
+
             fetch(`${apiEndpoint}/auth.twa`, {
                 method: 'POST',
                 headers: {
