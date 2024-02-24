@@ -1,5 +1,7 @@
 
-const apiEndpoint: string = process.env.REACT_APP_API_ENDPOINT || 'http://192.168.0.170:13807/api/v1';
+console.log('process.env.REACT_APP_API_ENDPOINT', process.env.REACT_APP_API_ENDPOINT);
+
+const apiEndpoint: string = 'https://music-gateway.letsw.app/api/v1';
 
 export {
     apiEndpoint

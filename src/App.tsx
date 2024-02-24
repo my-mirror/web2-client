@@ -21,20 +21,45 @@ function App() {
                     "twa_data": window.Telegram.WebApp.initData
                 }),
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data["auth_v1_token"] === undefined) {
+                        window.location.href = "/unauthorized";
+                        return;
+                    }
+                    setApiToken(data["auth_v1_token"]);
+                })
+                .catch(error => {
+                    console.error('There was a problem with your fetch operation:', error);
+                });
+
+            fetch(`${apiEndpoint}/account`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': apiToken,
                 }
-                return response.json();
             })
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('There was a problem with your fetch operation:', error);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('There was a problem with your fetch operation:', error);
+                });
         } else {
-          console.log("Telegram WebApp not found");
+            console.log("Telegram WebApp not found");
+            window.location.href = "/unauthorized";
         }
     }, []);
     return (
