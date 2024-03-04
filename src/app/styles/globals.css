@@ -1,0 +1,25 @@
+@import url("https://fonts.cdnfonts.com/css/menlo");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer {
+  * {
+    @apply caret-primary select-none;
+  }
+
+  body,
+  html {
+    @apply bg-gray text-white;
+    font-family: "Menlo", sans-serif;
+  }
+
+  button {
+    @apply transition-all active:opacity-60;
+  }
+
+  a {
+    @apply transition-all active:opacity-60;
+  }
+}
