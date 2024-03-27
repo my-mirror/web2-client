@@ -12,19 +12,19 @@ import { CoverButton } from "~/pages/root/steps/data-step/components/cover-butto
 import { HiddenFileInput } from "~/shared/ui/hidden-file-input";
 import { useRootStore } from "~/shared/stores/root";
 import { Checkbox } from "~/shared/ui/checkbox";
-import { BackButton } from "~/shared/ui/back-button";
+import { useAuth } from "~/shared/services/auth";
 
 type DataStepProps = {
-  prevStep(): void;
   nextStep(): void;
 };
 
-export const DataStep = ({ nextStep, prevStep }: DataStepProps) => {
+export const DataStep = ({ nextStep }: DataStepProps) => {
   const rootStore = useRootStore();
+  const auth = useAuth();
 
   const formSchema = useMemo(() => {
     return z.object({
-      name: z.string().min(1),
+      name: z.string().min(1, "Обязательное поле"),
       author: z.string().optional(),
     });
   }, []);
@@ -50,6 +50,9 @@ export const DataStep = ({ nextStep, prevStep }: DataStepProps) => {
           rootStore.setAuthor(values.author);
         }
 
+        const res = await auth.mutateAsync();
+        sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
+
         nextStep();
       } catch (error) {
         console.error("Error:", error);
@@ -59,8 +62,6 @@ export const DataStep = ({ nextStep, prevStep }: DataStepProps) => {
 
   return (
     <section className={"mt-4 px-4 pb-8"}>
-      <BackButton onClick={prevStep} />
-
       <div className={"mb-[30px] flex flex-col text-sm"}>
         <span className={"ml-4"}>/Заполните информацию о контенте</span>
         <div>
@@ -72,6 +73,7 @@ export const DataStep = ({ nextStep, prevStep }: DataStepProps) => {
         <FormLabel label={"Название"}>
           <Input
             placeholder={"[ Введите название ]"}
+            error={form.formState.errors?.name}
             {...form.register("name")}
           />
         </FormLabel>
@@ -79,6 +81,7 @@ export const DataStep = ({ nextStep, prevStep }: DataStepProps) => {
         <FormLabel label={"Имя автора/исполнителя"}>
           <Input
             placeholder={"[ введите имя автора/исполнителя ]"}
+            error={form.formState.errors?.author}
             {...form.register("author")}
           />
         </FormLabel>
