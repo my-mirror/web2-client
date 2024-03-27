@@ -81,12 +81,7 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
       WebApp.close();
     } catch (error) {
       console.error("An error occurred during the submission process:", error);
-
-      if (error?.status === 400) {
-        alert(
-          "Введенные данные неверные, проверьте правильность введенных данных.",
-        );
-      }
+      alert(`Возникла ошибка, ${JSON.stringify(error)}`);
     }
   };
 
