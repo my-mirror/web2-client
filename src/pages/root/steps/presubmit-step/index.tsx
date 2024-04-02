@@ -79,9 +79,15 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
       });
 
       WebApp.close();
-    } catch (error) {
+      // @ts-expect-error Type issues
+    } catch (error: never) {
       console.error("An error occurred during the submission process:", error);
-      alert(`Возникла ошибка, ${JSON.stringify(error)}`);
+
+      if (error?.status === 400) {
+        alert(
+          "Введенные данные неверные, проверьте правильность введенных данных.",
+        );
+      }
     }
   };
 
