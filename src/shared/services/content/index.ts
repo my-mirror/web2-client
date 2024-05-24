@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 import { request } from "~/shared/libs";
 import { Royalty } from "~/shared/stores/root";
@@ -26,13 +26,37 @@ export const useCreateNewContent = () => {
   );
 };
 
+// export const usePurchaseContent = () => {
+//   return useMutation(
+//     ["purchase-content"],
+//     (payload: { content_address: string; price: string }) => {
+//       return request.post<{
+//         message: string;
+//       }>("/blockchain.sendPurchaseContentMessage", payload);
+//     },
+//   );
+// };
+
+export const useViewContent = (contentId: string) => {
+  return useQuery(["view", "content", contentId], () => {
+    return request.get(`/content.view/${contentId}`);
+  });
+};
+
 export const usePurchaseContent = () => {
   return useMutation(
-    ["purchase-content"],
-    (payload: { content_address: string; price: string }) => {
-      return request.post<{
-        message: string;
-      }>("/blockchain.sendPurchaseContentMessage", payload);
+    ["purchase", "content"],
+    ({
+      content_address,
+      license_type,
+    }: {
+      content_address: string;
+      license_type: "listen" | "resale";
+    }) => {
+      return request.post("/blockchain.sendPurchaseContentMessage", {
+        content_address,
+        license_type,
+      });
     },
   );
 };

@@ -17,3 +17,5 @@ export const processFile = async (file: File) => {
 
 export const getIndexArray = (len: number) =>
   new Array(len).fill("").map((_, i) => i);
+
+export const fromNanoTON = (amount: string) => Number(amount) / 10 ** 9;

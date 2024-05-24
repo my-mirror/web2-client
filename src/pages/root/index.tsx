@@ -4,11 +4,12 @@ import { PresubmitStep } from "./steps/presubmit-step";
 
 import { useSteps } from "~/shared/hooks/use-steps";
 import { PriceStep } from "~/pages/root/steps/price-step";
+import { WelcomeStep } from "~/pages/root/steps/welcome-step";
 
 export const RootPage = () => {
   const { ActiveSection } = useSteps(({ nextStep, prevStep }) => {
     return [
-      // <WelcomeStep nextStep={nextStep} />,
+      <WelcomeStep nextStep={nextStep} />,
       <DataStep nextStep={nextStep} />,
       // <AuthorsStep prevStep={prevStep} nextStep={nextStep} />,
       <RoyaltyStep prevStep={prevStep} nextStep={nextStep} />,
