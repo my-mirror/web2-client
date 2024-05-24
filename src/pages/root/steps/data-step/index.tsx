@@ -45,24 +45,24 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
     },
   });
 
-  const handleSubmit = () => {
-    form.handleSubmit(async (values: FormValues) => {
-      try {
-        rootStore.setName(values.name);
-
-        if (values.author) {
-          rootStore.setAuthor(values.author);
-        }
-
-        const res = await auth.mutateAsync();
-        sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
-
-        nextStep();
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    })();
-  };
+  // const handleSubmit = () => {
+  //   form.handleSubmit(async (values: FormValues) => {
+  //     try {
+  //       rootStore.setName(values.name);
+  //
+  //       if (values.author) {
+  //         rootStore.setAuthor(values.author);
+  //       }
+  //
+  //       const res = await auth.mutateAsync();
+  //       sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
+  //
+  //       nextStep();
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   })();
+  // };
 
   return (
     <section className={"mt-4 px-4 pb-8"}>
