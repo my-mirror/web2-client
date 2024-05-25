@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import ReactPlayer from "react-player/lazy";
-import { useNavigate } from "react-router-dom";
 
 import { FormLabel } from "~/shared/ui/form-label";
 import { Input } from "~/shared/ui/input";
@@ -14,7 +13,6 @@ import { HiddenFileInput } from "~/shared/ui/hidden-file-input";
 import { useRootStore } from "~/shared/stores/root";
 import { Checkbox } from "~/shared/ui/checkbox";
 import { useAuth } from "~/shared/services/auth";
-import { Routes } from "~/app/router/constants";
 
 type DataStepProps = {
   nextStep(): void;
@@ -23,8 +21,6 @@ type DataStepProps = {
 export const DataStep = ({ nextStep }: DataStepProps) => {
   const rootStore = useRootStore();
   const auth = useAuth();
-
-  const navigate = useNavigate();
 
   const formSchema = useMemo(() => {
     return z.object({
@@ -45,24 +41,24 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
     },
   });
 
-  // const handleSubmit = () => {
-  //   form.handleSubmit(async (values: FormValues) => {
-  //     try {
-  //       rootStore.setName(values.name);
-  //
-  //       if (values.author) {
-  //         rootStore.setAuthor(values.author);
-  //       }
-  //
-  //       const res = await auth.mutateAsync();
-  //       sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
-  //
-  //       nextStep();
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   })();
-  // };
+  const handleSubmit = () => {
+    form.handleSubmit(async (values: FormValues) => {
+      try {
+        rootStore.setName(values.name);
+
+        if (values.author) {
+          rootStore.setAuthor(values.author);
+        }
+
+        const res = await auth.mutateAsync();
+        sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
+
+        nextStep();
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    })();
+  };
 
   return (
     <section className={"mt-4 px-4 pb-8"}>
@@ -158,15 +154,14 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
 
       <Button
         className={"mt-[30px]"}
-        // onClick={handleSubmit}
-        onClick={() => navigate(Routes.ViewContent)}
+        onClick={handleSubmit}
         includeArrows={true}
         label={"Готово"}
-        // disabled={
-        //   !form.formState.isValid ||
-        //   !rootStore.file ||
-        //   (rootStore.allowCover && !rootStore.cover)
-        // }
+        disabled={
+          !form.formState.isValid ||
+          !rootStore.file ||
+          (rootStore.allowCover && !rootStore.cover)
+        }
       />
     </section>
   );
