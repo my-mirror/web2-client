@@ -105,12 +105,16 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
                 "w-full border border-white bg-[#2B2B2B] px-[10px] py-[8px] text-sm"
               }
             >
-              <ReactPlayer
-                playsinline={true}
-                controls={true}
-                width={"100%"}
-                url={rootStore.fileSrc}
-              />
+          <ReactPlayer
+            playsinline={true}
+            controls={true}
+            width="100%"
+            config={{ file: { attributes: { playsInline: true } } }}
+            url={rootStore.fileSrc}
+          />
+
+
+
             </div>
           )}
         </FormLabel>

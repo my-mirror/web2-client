@@ -66,13 +66,13 @@ export const ViewContentPage = () => {
         </div>
       )}
 
-      <ReactPlayer
-        playsinline={true}
-        controls={true}
-        width={"100%"}
-        config={{}}
-        url={content?.data?.display_options?.content_url}
-      />
+    <ReactPlayer
+      playsinline={true}
+      controls={true}
+      width="100%"
+      config={{ file: { attributes: { playsInline: true } } }}
+      url={content?.data?.display_options?.content_url} 
+   />
 
       <section className={"flex flex-col"}>
         <h1 className={"text-[20px] font-bold"}>
