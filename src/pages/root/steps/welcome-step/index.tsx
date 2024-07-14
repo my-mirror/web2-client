@@ -22,7 +22,7 @@ console.log('💩💩💩 enter WelcomeStep');
     if (tonConnectUI.connected) {
       const res = await auth.mutateAsync();
       sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
-      
+
       nextStep();
     } else {
       await tonConnectUI.openModal();
@@ -33,6 +33,11 @@ console.log('💩💩💩 enter WelcomeStep');
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      const res = await auth.mutateAsync();
+      sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
+    }, 10);
+
     setTimeout(() => {
       setLoaded(true);
     }, 4000);
@@ -49,7 +54,7 @@ console.log('💩💩💩 enter WelcomeStep');
       <section
         className={"relative flex h-[100vh] items-center justify-center"}
       >
-        <img alt={"splash"} className={"mb-20 h-[500px]"} src={"/splash.gif"} />
+        <img alt={"splash"} className={"mb-20 h-[400px]"} src={"/splash.gif"} />
       </section>
     );
   }
