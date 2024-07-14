@@ -20,6 +20,9 @@ console.log('💩💩💩 enter WelcomeStep');
 
   const handleNextClick = async () => {
     if (tonConnectUI.connected) {
+      const res = await auth.mutateAsync();
+      sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
+      
       nextStep();
     } else {
       await tonConnectUI.openModal();
@@ -46,7 +49,7 @@ console.log('💩💩💩 enter WelcomeStep');
       <section
         className={"relative flex h-[100vh] items-center justify-center"}
       >
-        <img alt={"splash"} className={"mb-20 h-[100px]"} src={"/splash.gif"} />
+        <img alt={"splash"} className={"mb-20 h-[500px]"} src={"/splash.gif"} />
       </section>
     );
   }
