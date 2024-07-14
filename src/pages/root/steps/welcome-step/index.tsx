@@ -33,10 +33,11 @@ console.log('💩💩💩 enter WelcomeStep');
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
+      console.log("💩💩💩 call auth");
       const res = await auth.mutateAsync();
       sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
-    }, 10);
+    }, 1000);
 
     setTimeout(() => {
       setLoaded(true);
