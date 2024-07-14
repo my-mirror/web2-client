@@ -12,7 +12,11 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
   const [tonConnectUI] = useTonConnectUI();
   const [isLoaded, setLoaded] = useState(false);
 
+console.log('💩💩💩 enter WelcomeStep');
+
   const auth = useAuth();
+
+  console.log('💩💩💩 after useAuth');
 
   const handleNextClick = async () => {
     if (tonConnectUI.connected) {
@@ -42,7 +46,7 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
       <section
         className={"relative flex h-[100vh] items-center justify-center"}
       >
-        <img alt={"splash"} className={"mb-20 h-[300px]"} src={"/splash.gif"} />
+        <img alt={"splash"} className={"mb-20 h-[100px]"} src={"/splash.gif"} />
       </section>
     );
   }

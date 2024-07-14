@@ -7,6 +7,8 @@ export const useAuth = () => {
   const WebApp = useWebApp();
 
   return useMutation(["auth"], () => {
+    console.log("👀👀👀 in useMutation - auth");
+
     return request.post<{
       connected_wallet: null | {
         version: string;
