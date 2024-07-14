@@ -5,9 +5,10 @@ import { request } from "~/shared/libs";
 
 export const useAuth = () => {
   const WebApp = useWebApp();
+  console.log("👀👀👀 webapp: ", WebApp);
 
   return useMutation(["auth"], () => {
-    console.log("👀👀👀 in useMutation - auth");
+    console.log("👀👀👀 in mutation - auth");
 
     return request.post<{
       connected_wallet: null | {
