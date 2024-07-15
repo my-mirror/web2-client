@@ -14,10 +14,15 @@ export const useAuth = () => {
 
     let tonProof;
     if (authV1Token) {
-      tonProof = await WebApp.initDataUnsafe.signData({
-        data: authV1Token,
-      });
-      console.log("👀👀👀 tonProof: ", tonProof);
+      try {
+        tonProof = await WebApp.initDataUnsafe.signData({
+          data: authV1Token,
+        });
+        console.log("👀👀👀 tonProof: ", tonProof);
+      } catch (error: any) {
+        console.error("👀👀👀 Error signing data: ", error);
+        throw new Error("Failed to sign data.");
+      }
     }
 
     return request.post<{
@@ -26,21 +31,25 @@ export const useAuth = () => {
         address: string;
         ton_balance: string;
       };
-
       auth_v1_token: string;
     }>("/auth.twa", {
       twa_data: WebApp.initData,
-      ton_proof: tonProof ? {
-        account: {
-          address: tonProof.address, 
-          // O.: add more as needed
-        },
-        ton_proof: {
-          signature: tonProof.signature,
-          payload: tonProof.payload,
-          // O.: add more as needed
-        }
-      } : undefined
+      ton_proof: tonProof
+        ? {
+            account: {
+              address: tonProof.address,
+              // O.: add more as needed
+            },
+            ton_proof: {
+              signature: tonProof.signature,
+              payload: tonProof.payload,
+              // O.: add more as needed
+            },
+          }
+        : undefined,
+    }).catch((error: any) => {
+      console.error("Error in authentication request: ", error);
+      throw new Error("Failed to authenticate.");
     });
   });
 };
