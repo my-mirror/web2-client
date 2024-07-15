@@ -21,7 +21,6 @@ export const useAuth = () => {
         console.log("👀👀👀 tonProof: ", tonProof);
       } catch (error: any) {
         console.error("👀👀👀 Error signing data: ", error);
-        throw new Error("Failed to sign data.");
       }
     }
 
