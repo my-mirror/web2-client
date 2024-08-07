@@ -12,43 +12,41 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
   const [tonConnectUI] = useTonConnectUI();
   const [isLoaded, setLoaded] = useState(false);
 
-console.log('💩💩💩 enter WelcomeStep');
+  console.log("💩💩💩 enter WelcomeStep");
 
   const auth = useAuth();
 
-  console.log('💩💩💩 after useAuth');
+  console.log("💩💩💩 after useAuth");
 
   const handleNextClick = async () => {
     if (tonConnectUI.connected) {
-      const res = await auth.mutateAsync();
-      sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
-
+      await auth.mutateAsync();
       nextStep();
     } else {
       await tonConnectUI.openModal();
-
-      const res = await auth.mutateAsync();
-      sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
+      await auth.mutateAsync();
     }
   };
 
   useEffect(() => {
-    setTimeout(async () => {
+    const first = setTimeout(async () => {
       console.log("💩💩💩 call auth");
-      const res = await auth.mutateAsync();
-      sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
+      await auth.mutateAsync();
     }, 1000);
 
-    setTimeout(() => {
+    const second = setTimeout(() => {
       setLoaded(true);
-    }, 4000);
-  }, []);
 
-  useEffect(() => {
-    if (tonConnectUI.connected) {
-      nextStep();
-    }
-  }, [nextStep, tonConnectUI.connected]);
+      if (tonConnectUI.connected) {
+        nextStep();
+      }
+    }, 4000);
+
+    return () => {
+      clearTimeout(first);
+      clearTimeout(second);
+    };
+  }, [tonConnectUI.connected]);
 
   if (!isLoaded) {
     return (
