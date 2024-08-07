@@ -12,7 +12,6 @@ import { CoverButton } from "~/pages/root/steps/data-step/components/cover-butto
 import { HiddenFileInput } from "~/shared/ui/hidden-file-input";
 import { useRootStore } from "~/shared/stores/root";
 import { Checkbox } from "~/shared/ui/checkbox";
-import { useAuth } from "~/shared/services/auth";
 
 type DataStepProps = {
   nextStep(): void;
@@ -20,7 +19,6 @@ type DataStepProps = {
 
 export const DataStep = ({ nextStep }: DataStepProps) => {
   const rootStore = useRootStore();
-  const auth = useAuth();
 
   const formSchema = useMemo(() => {
     return z.object({
@@ -49,10 +47,6 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
         if (values.author) {
           rootStore.setAuthor(values.author);
         }
-
-        const res = await auth.mutateAsync();
-        sessionStorage.setItem("auth_v1_token", res.data.auth_v1_token);
-
         nextStep();
       } catch (error) {
         console.error("Error:", error);
