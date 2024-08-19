@@ -12,6 +12,7 @@ import { CoverButton } from "~/pages/root/steps/data-step/components/cover-butto
 import { HiddenFileInput } from "~/shared/ui/hidden-file-input";
 import { useRootStore } from "~/shared/stores/root";
 import { Checkbox } from "~/shared/ui/checkbox";
+import { AudioPlayer } from "~/shared/ui/audio-player";
 
 type DataStepProps = {
   nextStep(): void;
@@ -47,6 +48,7 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
         if (values.author) {
           rootStore.setAuthor(values.author);
         }
+
         nextStep();
       } catch (error) {
         console.error("Error:", error);
@@ -55,112 +57,114 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
   };
 
   return (
-    <section className={"mt-4 px-4 pb-8"}>
-      <div className={"mb-[30px] flex flex-col text-sm"}>
-        <span className={"ml-4"}>/Заполните информацию о контенте</span>
-        <div>
-          1/<span className={"text-[#7B7B7B]"}>5</span>
+      <section className={"mt-4 px-4 pb-8"}>
+        <div className={"mb-[30px] flex flex-col text-sm"}>
+          <span className={"ml-4"}>/Заполните информацию о контенте</span>
+          <div>
+            1/<span className={"text-[#7B7B7B]"}>5</span>
+          </div>
         </div>
-      </div>
 
-      <div className={"flex flex-col gap-[20px]"}>
-        <FormLabel label={"Название"}>
-          <Input
-            placeholder={"[ Введите название ]"}
-            error={form.formState.errors?.name}
-            {...form.register("name")}
-          />
-        </FormLabel>
+        <div className={"flex flex-col gap-[20px]"}>
+          <FormLabel label={"Название"}>
+            <Input
+                placeholder={"[ Введите название ]"}
+                error={form.formState.errors?.name}
+                {...form.register("name")}
+            />
+          </FormLabel>
 
-        <FormLabel label={"Имя автора/исполнителя"}>
-          <Input
-            placeholder={"[ введите имя автора/исполнителя ]"}
-            error={form.formState.errors?.author}
-            {...form.register("author")}
-          />
-        </FormLabel>
+          <FormLabel label={"Имя автора/исполнителя"}>
+            <Input
+                placeholder={"[ введите имя автора/исполнителя ]"}
+                error={form.formState.errors?.author}
+                {...form.register("author")}
+            />
+          </FormLabel>
 
-        <FormLabel label={"Файл"}>
-          <HiddenFileInput
-            id={"file"}
-            shouldProcess={false}
-            accept={"video/mp4,video/x-m4v,video/*,audio/mp3,audio/*"}
-            onChange={(file) => {
-              rootStore.setFile(file);
-              rootStore.setFileSrc(URL.createObjectURL(file));
-            }}
-          />
-
-          {!rootStore.fileSrc && <FileButton htmlFor={"file"} />}
-
-          {rootStore.fileSrc && (
-            <div
-              className={
-                "w-full border border-white bg-[#2B2B2B] px-[10px] py-[8px] text-sm"
-              }
-            >
-          <ReactPlayer
-            playsinline={true}
-            controls={true}
-            width="100%"
-            config={{ file: { attributes: { playsInline: true } } }}
-            url={rootStore.fileSrc}
-          />
-
-
-
-            </div>
-          )}
-        </FormLabel>
-
-        <div className={"flex flex-col gap-2"}>
-          <FormLabel
-            label={"Разрешить обложку"}
-            labelClassName={"flex"}
-            formLabelAddon={
-              <Checkbox
-                onClick={() => rootStore.setAllowCover(!rootStore.allowCover)}
-                checked={rootStore.allowCover}
-              />
-            }
-          />
-
-          {rootStore.allowCover && (
-            <FormLabel label={"Обложка"}>
-              <HiddenFileInput
-                id={"cover"}
-                accept={"image/*"}
-                onChange={(cover) => {
-                  rootStore.setCover(cover);
+          <FormLabel label={"Файл"}>
+            <HiddenFileInput
+                id={"file"}
+                shouldProcess={false}
+                accept={"video/mp4,video/x-m4v,video/*,audio/mp3,audio/*"}
+                onChange={(file) => {
+                  rootStore.setFile(file);
+                  rootStore.setFileSrc(URL.createObjectURL(file));
+                  rootStore.setFileType(file.type); // Save the file type for conditional rendering
                 }}
-              />
+            />
 
-              {rootStore.cover ? (
-                <CoverButton
-                  src={URL.createObjectURL(rootStore.cover)}
-                  onClick={() => {
-                    rootStore.setCover(null);
-                  }}
-                />
-              ) : (
-                <FileButton htmlFor={"cover"} />
-              )}
-            </FormLabel>
-          )}
+            {!rootStore.fileSrc && <FileButton htmlFor={"file"} />}
+
+            {rootStore.fileSrc && (
+                <div
+                    className={
+                      "w-full border border-white bg-[#2B2B2B] px-[10px] py-[8px] text-sm"
+                    }
+                >
+                  {rootStore.fileType?.startsWith("audio") ? (
+                      <AudioPlayer src={rootStore.fileSrc} />
+                  ) : (
+                      <ReactPlayer
+                          playsinline={true}
+                          controls={true}
+                          width="100%"
+                          config={{ file: { attributes: { playsInline: true } } }}
+                          url={rootStore.fileSrc}
+                      />
+                  )}
+                </div>
+            )}
+          </FormLabel>
+
+          <div className={"flex flex-col gap-2"}>
+            <FormLabel
+                label={"Разрешить обложку"}
+                labelClassName={"flex"}
+                formLabelAddon={
+                  <Checkbox
+                      onClick={() => rootStore.setAllowCover(!rootStore.allowCover)}
+                      checked={rootStore.allowCover}
+                  />
+                }
+            />
+
+            {rootStore.allowCover && (
+                <FormLabel label={"Обложка"}>
+                  <HiddenFileInput
+                      id={"cover"}
+                      accept={"image/*"}
+                      onChange={(cover) => {
+                        rootStore.setCover(cover);
+                      }}
+                  />
+
+                  {rootStore.cover ? (
+                      <CoverButton
+                          src={URL.createObjectURL(rootStore.cover)}
+                          onClick={() => {
+                            rootStore.setCover(null);
+                          }}
+                      />
+                  ) : (
+                      <FileButton htmlFor={"cover"} />
+                  )}
+                </FormLabel>
+            )}
+          </div>
         </div>
-      </div>
 
-      <Button
-        className={"mt-[30px]"}
-        onClick={handleSubmit}
-        includeArrows={true}
-        label={"Готово"}
-        disabled={
-          !form.formState.isValid ||
-          !rootStore.file ||
-          (rootStore.allowCover && !rootStore.cover)
-        }
-      />
-    </section>
+        <Button
+            className={"mt-[30px]"}
+            onClick={handleSubmit}
+            includeArrows={true}
+            label={"Готово"}
+            disabled={
+                !form.formState.isValid ||
+                !rootStore.file ||
+                (rootStore.allowCover && !rootStore.cover)
+            }
+        />
+      </section>
   );
 };

@@ -15,6 +15,9 @@ type RootStore = {
   file: File | null;
   setFile: (file: File) => void;
 
+  fileType: string;
+  setFileType: (type: string) => void;
+
   fileSrc: string;
   setFileSrc: (fileSrc: string) => void;
 
@@ -52,6 +55,9 @@ export const useRootStore = create<RootStore>((set) => ({
 
   file: null,
   setFile: (file) => set({ file }),
+
+  fileType: "",
+  setFileType: (fileType) => set({ fileType }),
 
   fileSrc: "",
   setFileSrc: (fileSrc) => set({ fileSrc }),

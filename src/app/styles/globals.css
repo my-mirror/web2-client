@@ -22,4 +22,61 @@
   a {
     @apply transition-all active:opacity-60;
   }
+
+  /*Input Range*/
+  /* Custom styles for the range input */
+  input[type="range"] {
+    -webkit-appearance: none; /* Remove default appearance */
+    width: 100%; /* Full width */
+    height: 2px; /* Track height */
+    background: linear-gradient(
+            to right,
+            white 0%, /* Start color of passed track */
+            white var(--value-percentage, 0%), /* End color of passed track */
+            gray var(--value-percentage, 0%), /* Start color of remaining track */
+            gray 100% /* End color of remaining track */
+    );
+    border-radius: 9999px; /* Rounded-full track */
+    outline: none; /* Remove outline */
+    transition: background 0.3s;
+  }
+
+  /* Style the thumb (toggle) */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 9px; /* Thumb width */
+    height: 9px; /* Thumb height */
+    background: #fff; /* Thumb color (blue-500) */
+    border-radius: 9999px; /* Rounded-full thumb */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s;
+  }
+
+  /* For Firefox */
+  input[type="range"]::-moz-range-thumb {
+    appearance: none;
+    width: 9px; /* Thumb width */
+    height: 9px; /* Thumb height */
+    background: #fff; /* Thumb color (blue-500) */
+    border-radius: 9999px; /* Rounded-full thumb */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s;
+  }
+
+  input[type="range"]::-moz-range-track {
+    -webkit-appearance: none; /* Remove default appearance */
+    width: 100%; /* Full width */
+    height: 2px; /* Track height */
+    background: linear-gradient(
+            to right,
+            white 0%, /* Start color of passed track */
+            white var(--value-percentage, 0%), /* End color of passed track */
+            gray var(--value-percentage, 0%), /* Start color of remaining track */
+            gray 100% /* End color of remaining track */
+    );
+    border-radius: 9999px; /* Rounded-full track */
+    outline: none; /* Remove outline */
+    transition: background 0.3s;
+  }
 }

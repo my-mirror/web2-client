@@ -118,7 +118,7 @@ export const PriceStep = ({ nextStep, prevStep }: PriceStepProps) => {
       </div>
 
       <div className={"flex flex-col gap-[20px]"}>
-        <FormLabel label={"Цена TON"}>
+        <FormLabel label={"Цена продажи TON"}>
           <div className={"my-2 flex flex-col gap-1.5"}>
             <p className={"text-xs"}>Минимальная стоимость {MIN_PRICE} TON.</p>
             <p className={"text-xs"}>

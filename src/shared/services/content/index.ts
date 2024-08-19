@@ -17,12 +17,14 @@ type UseCreateNewContentPayload = {
 
 export const useCreateNewContent = () => {
   return useMutation(
-    ["create-new-content"],
-    (payload: UseCreateNewContentPayload) => {
-      return request.post<{
-        message: string;
-      }>("/blockchain.sendNewContentMessage", payload);
-    },
+      ["create-new-content"],
+      (payload: UseCreateNewContentPayload) => {
+        return request.post<{
+          address: string;
+          amount: string;
+          payload: string;
+        }>("/blockchain.sendNewContentMessage", payload);
+      },
   );
 };
 
@@ -45,18 +47,22 @@ export const useViewContent = (contentId: string) => {
 
 export const usePurchaseContent = () => {
   return useMutation(
-    ["purchase", "content"],
-    ({
-      content_address,
-      license_type,
-    }: {
-      content_address: string;
-      license_type: "listen" | "resale";
-    }) => {
-      return request.post("/blockchain.sendPurchaseContentMessage", {
-        content_address,
-        license_type,
-      });
-    },
+      ["purchase", "content"],
+      ({
+         content_address,
+         license_type,
+       }: {
+        content_address: string;
+        license_type: "listen" | "resale";
+      }) => {
+        return request.post<{
+          address: string;
+          amount: string;
+          payload: string;
+        }>("/blockchain.sendPurchaseContentMessage", {
+          content_address,
+          license_type,
+        });
+      },
   );
 };
