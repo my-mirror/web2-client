@@ -26,7 +26,7 @@ export const ViewContentPage = () => {
 
       const contentResponse = await purchaseContent({
         content_address: content?.data?.encrypted?.cid,
-        license_type: "listen",
+        license_type: "resale",
       });
 
       const transactionResponse = await tonConnectUI.sendTransaction({
@@ -91,7 +91,7 @@ export const ViewContentPage = () => {
         <Button
             onClick={handleBuyContent}
             className={"mb-4 mt-[30px] h-[48px]"}
-            label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.listen?.price)} ТОН`}
+            label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`}
             includeArrows={true}
         />
       </main>
