@@ -78,15 +78,12 @@ export const useAuth = () => {
             sessionStorage.setItem(sessionStorageKey, res?.data?.auth_v1_token);
           } else {
             alert("Please try another wallet");
-            tonConnectUI.disconnect();
           }
         })
         .catch((error: any) => {
           console.error("Error in authentication request: ", error);
           throw new Error("Failed to authenticate.");
         });
-    } else {
-      void tonConnectUI.disconnect();
     }
   });
 };

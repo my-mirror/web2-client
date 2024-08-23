@@ -42,13 +42,10 @@ export const ViewContentPage = () => {
 
       if (transactionResponse.boc) {
         WebApp.close();
-
-        await tonConnectUI.disconnect();
       } else {
         console.error("Transaction failed:", transactionResponse);
       }
     } catch (error) {
-      await tonConnectUI.disconnect();
       console.error("Error handling Ton Connect subscription:", error);
     }
   }, [content]);

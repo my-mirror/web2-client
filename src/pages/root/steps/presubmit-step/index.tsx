@@ -97,8 +97,6 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
 
         if (transactionResponse.boc) {
           WebApp.close();
-
-          await tonConnectUI.disconnect();
         } else {
           console.error("Transaction failed:", transactionResponse);
         }
@@ -107,7 +105,7 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
       WebApp.close();
       // @ts-expect-error Type issues
     } catch (error: never) {
-      await tonConnectUI.disconnect();
+
 
       console.error("An error occurred during the submission process:", error);
 
