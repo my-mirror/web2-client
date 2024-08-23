@@ -15,6 +15,7 @@ import { BackButton } from "~/shared/ui/back-button";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 
 
+
 type PresubmitStepProps = {
   prevStep(): void;
 };
