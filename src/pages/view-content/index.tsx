@@ -91,6 +91,14 @@ export const ViewContentPage = () => {
             label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`}
             includeArrows={true}
         />
+
+        <Button
+            onClick={() => {
+              WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
+            }}
+            className={"mb-4 mt-[30px] h-[48px]"}
+            label={`Загрузить свой контент`}
+        />
       </main>
   );
 };
