@@ -74,7 +74,7 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({ src }) => {
 
     return (
         <div className="flex items-center space-x-4">
-            <audio ref={audioRef} src={src} />
+            <audio ref={audioRef} autoPlay={true} src={src} />
 
             <button
                 onClick={togglePlayPause}

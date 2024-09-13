@@ -83,7 +83,7 @@ export const ViewContentPage = () => {
                 playsinline={true}
                 controls={true}
                 width="100%"
-                config={{ file: { attributes: { playsInline: true, } }, }}
+                config={{ file: { attributes: { playsInline: true, autoplay: true } }, }}
                 url={content?.data?.display_options?.content_url}
             />
         )}
