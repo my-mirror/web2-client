@@ -5,13 +5,13 @@ import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { Button } from "~/shared/ui/button";
 import { usePurchaseContent, useViewContent } from "~/shared/services/content";
 import { fromNanoTON } from "~/shared/utils";
-import { useCallback } from "react";
+import {useCallback, useEffect, useMemo} from "react";
 import { AudioPlayer } from "~/shared/ui/audio-player";
 
 export const ViewContentPage = () => {
   const WebApp = useWebApp();
 
-  const { data: content } = useViewContent(WebApp.initDataUnsafe?.start_param);
+  const { data: content, refetch: refetchContent } = useViewContent(WebApp.initDataUnsafe?.start_param);
 
   const { mutateAsync: purchaseContent } = usePurchaseContent();
 
@@ -50,6 +50,20 @@ export const ViewContentPage = () => {
     }
   }, [content]);
 
+  const haveLicense = useMemo(() => {
+    return content?.data?.have_licenses?.includes("listen") || content?.data?.have_licenses?.includes("resale")
+  }, [content])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void refetchContent()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, []);
+
+
+
   return (
       <main className={"flex w-full flex-col gap-[50px] px-4"}>
         {content?.data?.display_options?.metadata?.image && (
@@ -69,7 +83,7 @@ export const ViewContentPage = () => {
                 playsinline={true}
                 controls={true}
                 width="100%"
-                config={{ file: { attributes: { playsInline: true } } }}
+                config={{ file: { attributes: { playsInline: true, } }, }}
                 url={content?.data?.display_options?.content_url}
             />
         )}
@@ -85,12 +99,13 @@ export const ViewContentPage = () => {
           </p>
         </section>
 
-        <Button
+        {!haveLicense && <Button
             onClick={handleBuyContent}
             className={"mb-4 mt-[30px] h-[48px]"}
             label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`}
             includeArrows={true}
         />
+        }
 
         <Button
             onClick={() => {
