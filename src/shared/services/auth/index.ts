@@ -4,7 +4,7 @@ import { useMutation } from "react-query";
 import { request } from "~/shared/libs";
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 
-const localStorageKey = "auth_v1_token";
+const sessionStorageKey = "auth_v1_token";
 const payloadTTLMS = 1000 * 60 * 20;
 
 export const useAuth = () => {
@@ -16,12 +16,8 @@ export const useAuth = () => {
   return useMutation(["auth"], async () => {
     clearInterval(interval.current);
 
-    // Проверяем токен в localStorage
-    const storedToken = localStorage.getItem(localStorageKey);
-
-    // Если нет кошелька, удаляем токен и запрашиваем новый
     if (!wallet) {
-      localStorage.removeItem(localStorageKey);
+      localStorage.removeItem(sessionStorageKey);
 
       const refreshPayload = async () => {
         tonConnectUI.setConnectRequestParameters({ state: "loading" });
@@ -36,12 +32,9 @@ export const useAuth = () => {
               console.error("Error in authentication request: ", error);
               throw new Error("Failed to authenticate.");
             });
-
         if (!value) {
           tonConnectUI.setConnectRequestParameters(null);
         } else {
-          // Сохраняем токен в localStorage
-          localStorage.setItem(localStorageKey, value.data.auth_v1_token);
           tonConnectUI.setConnectRequestParameters({
             state: "ready",
             value: {
@@ -51,25 +44,12 @@ export const useAuth = () => {
         }
       };
 
-      // Обновляем токен каждые 20 минут
       void refreshPayload();
-      interval.current = setInterval(refreshPayload, payloadTTLMS);
+      setInterval(refreshPayload, payloadTTLMS);
 
       return;
     }
 
-    // Если токен уже сохранён в localStorage, пропускаем повторную авторизацию
-    if (storedToken) {
-      tonConnectUI.setConnectRequestParameters({
-        state: "ready",
-        value: {
-          tonProof: storedToken,
-        },
-      });
-      return;
-    }
-
-    // Логика для случая, когда есть кошелек и требуется тонProof
     if (
         wallet.connectItems?.tonProof &&
         !("error" in wallet.connectItems.tonProof)
@@ -95,8 +75,7 @@ export const useAuth = () => {
           })
           .then((res) => {
             if (res?.data?.auth_v1_token) {
-              // Сохраняем токен в localStorage
-              localStorage.setItem(localStorageKey, res?.data?.auth_v1_token);
+              localStorage.setItem(sessionStorageKey, res?.data?.auth_v1_token);
             } else {
               alert("Please try another wallet");
             }
