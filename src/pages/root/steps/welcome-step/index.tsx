@@ -28,25 +28,35 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   const first = setTimeout(async () => {
+  //     console.log("💩💩💩 call auth");
+  //     await auth.mutateAsync();
+  //   }, 1000);
+  //
+  //   const second = setTimeout(() => {
+  //     setLoaded(true);
+  //
+  //     if (tonConnectUI.connected) {
+  //       nextStep();
+  //     }
+  //   }, 4000);
+  //
+  //   return () => {
+  //     clearTimeout(first);
+  //     clearTimeout(second);
+  //   };
+  // }, [tonConnectUI.connected]);
+
   useEffect(() => {
-    const first = setTimeout(async () => {
-      console.log("💩💩💩 call auth");
-      await auth.mutateAsync();
-    }, 1000);
-
-    const second = setTimeout(() => {
-      setLoaded(true);
-
-      if (tonConnectUI.connected) {
-        nextStep();
-      }
-    }, 4000);
+    const timeout = setTimeout(() => {
+      setLoaded(true)
+    }, 5000);
 
     return () => {
-      clearTimeout(first);
-      clearTimeout(second);
-    };
-  }, [tonConnectUI.connected]);
+      clearTimeout(timeout);
+    }
+  }, []);
 
   if (!isLoaded) {
     return (

@@ -21,6 +21,7 @@ export const useUploadFile = () => {
       }>("/storage", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: localStorage.getItem('auth_v1_token') ?? ""
         },
 
         onUploadProgress: (progressEvent) => {

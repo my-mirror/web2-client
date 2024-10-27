@@ -23,7 +23,11 @@ export const useCreateNewContent = () => {
           address: string;
           amount: string;
           payload: string;
-        }>("/blockchain.sendNewContentMessage", payload);
+        }>("/blockchain.sendNewContentMessage", payload, {
+            headers: {
+                Authorization: localStorage.getItem('auth_v1_token') ?? ""
+            }
+        });
       },
   );
 };
@@ -41,7 +45,11 @@ export const useCreateNewContent = () => {
 
 export const useViewContent = (contentId: string) => {
   return useQuery(["view", "content", contentId], () => {
-    return request.get(`/content.view/${contentId}`);
+    return request.get(`/content.view/${contentId}`, {
+        headers: {
+            Authorization: localStorage.getItem('auth_v1_token') ?? ""
+        }
+    });
   });
 };
 
@@ -62,6 +70,10 @@ export const usePurchaseContent = () => {
         }>("/blockchain.sendPurchaseContentMessage", {
           content_address,
           license_type,
+        }, {
+            headers: {
+                Authorization: localStorage.getItem('auth_v1_token') ?? ""
+            }
         });
       },
   );
