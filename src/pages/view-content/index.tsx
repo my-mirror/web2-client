@@ -49,7 +49,8 @@ export const ViewContentPage = () => {
       });
 
       if (transactionResponse.boc) {
-        WebApp.close();
+        void refetchContent()
+        console.log(transactionResponse.boc, "PURCHASED")
       } else {
         console.error("Transaction failed:", transactionResponse);
       }
