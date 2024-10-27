@@ -26,6 +26,8 @@ export const ViewContentPage = () => {
       if (!tonConnectUI.connected) {
         await tonConnectUI.openModal();
         await auth.mutateAsync();
+
+        return
       }
 
       await auth.mutateAsync();
