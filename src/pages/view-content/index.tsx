@@ -20,13 +20,15 @@ export const ViewContentPage = () => {
 
   const auth = useAuth();
 
+  useEffect(() => {
+    void auth.mutateAsync()
+  }, []);
 
   const handleBuyContent = useCallback(async () => {
     try {
       if (!tonConnectUI.connected) {
         await tonConnectUI.openModal();
         await auth.mutateAsync();
-
         return
       }
 
@@ -57,7 +59,7 @@ export const ViewContentPage = () => {
     } catch (error) {
       console.error("Error handling Ton Connect subscription:", error);
     }
-  }, [content]);
+  }, [content, tonConnectUI.connected]);
 
   const haveLicense = useMemo(() => {
     return content?.data?.have_licenses?.includes("listen") || content?.data?.have_licenses?.includes("resale")
