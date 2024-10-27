@@ -21,6 +21,7 @@ export const ViewContentPage = () => {
   const auth = useAuth();
 
   useEffect(() => {
+    void tonConnectUI.disconnect()
     void auth.mutateAsync()
   }, []);
 
@@ -31,8 +32,6 @@ export const ViewContentPage = () => {
         await auth.mutateAsync();
         return
       }
-
-      await auth.mutateAsync();
 
       const contentResponse = await purchaseContent({
         content_address: content?.data?.encrypted?.cid,
