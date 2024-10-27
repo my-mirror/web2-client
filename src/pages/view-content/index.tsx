@@ -7,6 +7,7 @@ import { usePurchaseContent, useViewContent } from "~/shared/services/content";
 import { fromNanoTON } from "~/shared/utils";
 import {useCallback, useEffect, useMemo} from "react";
 import { AudioPlayer } from "~/shared/ui/audio-player";
+import {useAuth} from "~/shared/services/auth";
 
 export const ViewContentPage = () => {
   const WebApp = useWebApp();
@@ -17,12 +18,17 @@ export const ViewContentPage = () => {
 
   const [tonConnectUI] = useTonConnectUI();
 
+  const auth = useAuth();
+
+
   const handleBuyContent = useCallback(async () => {
     try {
       if (!tonConnectUI.connected) {
         await tonConnectUI.openModal();
-        return;
+        await auth.mutateAsync();
       }
+
+      await auth.mutateAsync();
 
       const contentResponse = await purchaseContent({
         content_address: content?.data?.encrypted?.cid,

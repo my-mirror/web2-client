@@ -84,6 +84,9 @@ export const useAuth = () => {
             console.error("Error in authentication request: ", error);
             throw new Error("Failed to authenticate.");
           });
+    } else {
+      void tonConnectUI.disconnect();
+      localStorage.removeItem(sessionStorageKey)
     }
   });
 };
