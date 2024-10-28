@@ -20,10 +20,7 @@ export const ViewContentPage = () => {
 
   const auth = useAuth();
 
-  useEffect(() => {
-    void tonConnectUI.disconnect()
-    void auth.mutateAsync()
-  }, []);
+
 
   const handleBuyContent = useCallback(async () => {
     try {
@@ -31,6 +28,8 @@ export const ViewContentPage = () => {
         await tonConnectUI.openModal();
         await auth.mutateAsync();
         return
+      } else {
+        await auth.mutateAsync()
       }
 
       const contentResponse = await purchaseContent({
