@@ -75,7 +75,7 @@ export const ViewContentPage = () => {
 
   return (
       <main className={"flex w-full flex-col gap-[50px] px-4"}>
-        {content?.data?.display_options?.metadata?.image && (
+        {content?.data?.content_type.startsWith("audio") && content?.data?.display_options?.metadata?.image && (
             <div className={"mt-[30px] h-[314px] w-full"}>
               <img
                   alt={"content_image"}
@@ -92,7 +92,10 @@ export const ViewContentPage = () => {
                 playsinline={true}
                 controls={true}
                 width="100%"
-                config={{ file: { attributes: { playsInline: true, autoplay: true } }, }}
+                config={{ file: { attributes: {
+                  playsInline: true, autoplay: true,
+                  poster: content?.data?.display_options?.metadata?.image || undefined,
+                } }, }}
                 url={content?.data?.display_options?.content_url}
             />
         )}
@@ -120,7 +123,7 @@ export const ViewContentPage = () => {
             onClick={() => {
               WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
             }}
-            className={"mb-4 mt-[30px] h-[48px]"}
+            className={"mb-4 mt-[-20px] h-[48px] bg-darkred"}
             label={`Загрузить свой контент`}
         />
       </main>

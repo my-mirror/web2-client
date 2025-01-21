@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useHapticFeedback } from "@vkruglikov/react-telegram-web-app";
 
 import { Input } from "~/shared/ui/input";
@@ -11,6 +11,7 @@ import { Spread } from "~/shared/ui/icons/spread.tsx";
 import { ConfirmModal } from "~/pages/root/steps/royalty-step/components/confirm-modal";
 import { useRootStore } from "~/shared/stores/root";
 import { BackButton } from "~/shared/ui/back-button";
+import { useTonConnectUI } from "@tonconnect/ui-react";
 
 type RoyaltyStepProps = {
   prevStep(): void;
@@ -70,6 +71,16 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
       royalty.reduce((acc, curr) => acc + curr.value, 0) === 100
     );
   }, [royalty]);
+
+  const [tonConnectUI] = useTonConnectUI();
+
+  // Устанавливаем адрес из tonConnectUI.account при загрузке страницы
+  useEffect(() => {
+    console.log('tonconnectUI', tonConnectUI)
+    if (tonConnectUI.account) {
+      setRoyalty([{ address: tonConnectUI.account.address, value: 100 }]);
+    }
+  }, [tonConnectUI.account, setRoyalty]);
 
   return (
     <section className={"mt-4 px-4 pb-8"}>
