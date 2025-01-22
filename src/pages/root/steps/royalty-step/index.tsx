@@ -79,8 +79,7 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
   useEffect(() => {
     console.log('tonconnectUI', tonConnectUI)
     if (tonConnectUI.account) {
-      setRoyalty([{ address: tonConnectUI.account.address
-      }), value: 100 }]);
+      setRoyalty([{ address: tonConnectUI.account.address, value: 100 }]);
     }
   }, [tonConnectUI.account, setRoyalty]);
 
