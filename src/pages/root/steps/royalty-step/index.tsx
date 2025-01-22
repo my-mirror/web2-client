@@ -13,6 +13,9 @@ import { ConfirmModal } from "~/pages/root/steps/royalty-step/components/confirm
 import { useRootStore } from "~/shared/stores/root";
 import { BackButton } from "~/shared/ui/back-button";
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import { Buffer } from 'buffer';
+
+window.Buffer = Buffer;
 
 type RoyaltyStepProps = {
   prevStep(): void;
