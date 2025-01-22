@@ -13,9 +13,6 @@ import { ConfirmModal } from "~/pages/root/steps/royalty-step/components/confirm
 import { useRootStore } from "~/shared/stores/root";
 import { BackButton } from "~/shared/ui/back-button";
 import { useTonConnectUI } from "@tonconnect/ui-react";
-import { Buffer } from 'buffer';
-
-window.Buffer = Buffer;
 
 type RoyaltyStepProps = {
   prevStep(): void;
@@ -82,10 +79,7 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
   useEffect(() => {
     console.log('tonconnectUI', tonConnectUI)
     if (tonConnectUI.account) {
-      setRoyalty([{ address: Address.parse(tonConnectUI.account.address).toString({
-        bounceable: true,
-        urlSafe: true,
-        testOnly: false,
+      setRoyalty([{ address: tonConnectUI.account.address
       }), value: 100 }]);
     }
   }, [tonConnectUI.account, setRoyalty]);
