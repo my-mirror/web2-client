@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useHapticFeedback } from "@vkruglikov/react-telegram-web-app";
+import { Address } from '@ton/core';
 
 import { Input } from "~/shared/ui/input";
 import { FormLabel } from "~/shared/ui/form-label";
@@ -78,7 +79,11 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
   useEffect(() => {
     console.log('tonconnectUI', tonConnectUI)
     if (tonConnectUI.account) {
-      setRoyalty([{ address: tonConnectUI.account.address, value: 100 }]);
+      setRoyalty([{ address: Address.parse(tonConnectUI.account.address).toString({
+        bounceable: true,
+        urlSafe: true,
+        testOnly: false,
+      }), value: 100 }]);
     }
   }, [tonConnectUI.account, setRoyalty]);
 
