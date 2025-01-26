@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useHapticFeedback } from "@vkruglikov/react-telegram-web-app";
-import { Address } from '@ton/core';
 
 import { Input } from "~/shared/ui/input";
 import { FormLabel } from "~/shared/ui/form-label";
