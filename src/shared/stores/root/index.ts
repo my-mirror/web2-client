@@ -44,6 +44,9 @@ type RootStore = {
 
   licenseResalePrice: number;
   setLicenseResalePrice: (licenseResalePrice: number) => void;
+
+  hashtags: string[];
+  setHashtags: (hashtags: string[]) => void;
 };
 
 export const useRootStore = create<RootStore>((set) => ({
@@ -85,4 +88,7 @@ export const useRootStore = create<RootStore>((set) => ({
 
   licenseResalePrice: 0,
   setLicenseResalePrice: (licenseResalePrice) => set({ licenseResalePrice }),
+
+  hashtags: [],
+  setHashtags: (hashtags: string[]) => set({ hashtags }),
 }));

@@ -79,4 +79,37 @@
     outline: none; /* Remove outline */
     transition: background 0.3s;
   }
+
+  /* English comment: override react-tag-input classes */
+  .ReactTags__tagInputField {
+    @apply bg-transparent text-gray placeholder:text-gray outline-none w-full h-8;
+    @apply border border-white py-[20px] !important;
+    /* English comment: 
+       'bg-transparent' to blend with your dark background 
+       'text-white' to have white text 
+       'placeholder:text-gray-400' to see the placeholder text in a lighter gray 
+       'outline-none' to remove default borders 
+    */
+  }
+
+  /* English comment: style for the tag itself when it's rendered */
+  .ReactTags__selected .ReactTags__tag {
+    @apply bg-[#363636] text-white text-sm inline-flex items-center px-2 py-1 rounded mr-1;
+    /* English comment:
+       'bg-[#363636]' to have a dark gray background
+       'text-white' keeps the text white 
+       'text-sm' smaller text 
+       'inline-flex items-center' for better alignment 
+       'px-2 py-1 rounded mr-1' for spacing and rounding 
+    */
+  }
+
+  .ReactTags__selected .ReactTags__remove {
+    @apply ml-1 text-gray hover:text-white cursor-pointer;
+    /* English comment:
+       'ml-1' a small margin to separate the 'x' or close symbol
+       'text-gray-400' by default, and change to white on hover
+       'cursor-pointer' so it looks clickable
+    */
+  }
 }

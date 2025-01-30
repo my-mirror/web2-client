@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import ReactPlayer from "react-player/lazy";
+import { WithContext as ReactTagInput } from 'react-tag-input';
 
 import { FormLabel } from "~/shared/ui/form-label";
 import { Input } from "~/shared/ui/input";
@@ -13,6 +14,7 @@ import { HiddenFileInput } from "~/shared/ui/hidden-file-input";
 import { useRootStore } from "~/shared/stores/root";
 import { Checkbox } from "~/shared/ui/checkbox";
 import { AudioPlayer } from "~/shared/ui/audio-player";
+import { HashtagInput } from "~/shared/ui/hashtag-input";
 
 type DataStepProps = {
   nextStep(): void;
@@ -80,6 +82,10 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
                 error={form.formState.errors?.author}
                 {...form.register("author")}
             />
+          </FormLabel>
+
+          <FormLabel label={"Хэштеги"}>
+            <HashtagInput />
           </FormLabel>
 
           <FormLabel label={"Файл"}>
