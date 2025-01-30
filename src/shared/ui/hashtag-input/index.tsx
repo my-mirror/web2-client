@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { WithContext as ReactTags } from "react-tag-input";
 import { useRootStore } from "~/shared/stores/root";
 

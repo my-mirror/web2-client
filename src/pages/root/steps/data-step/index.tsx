@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import ReactPlayer from "react-player/lazy";
-import { WithContext as ReactTagInput } from 'react-tag-input';
 
 import { FormLabel } from "~/shared/ui/form-label";
 import { Input } from "~/shared/ui/input";
