@@ -13,7 +13,7 @@ type RootStore = {
   setAuthor: (author: string) => void;
 
   file: File | null;
-  setFile: (file: File) => void;
+  setFile: (file: File | null) => void;
 
   fileType: string;
   setFileType: (type: string) => void;
