@@ -15,6 +15,7 @@ import { Checkbox } from "~/shared/ui/checkbox";
 import { AudioPlayer } from "~/shared/ui/audio-player";
 import { HashtagInput } from "~/shared/ui/hashtag-input";
 import { XMark } from "~/shared/ui/icons/x-mark";
+import { Replace } from "~/shared/ui/icons/replace";
 
 type DataStepProps = {
   nextStep(): void;
@@ -95,18 +96,20 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
         </FormLabel>
 
         <FormLabel label={"Файл"}>
-          <HiddenFileInput
-            id={"file"}
-            shouldProcess={false}
-            accept={"video/mp4,video/x-m4v,video/*,audio/mp3,audio/*"}
-            onChange={(file) => {
-              rootStore.setFile(file);
-              rootStore.setFileSrc(URL.createObjectURL(file));
-              rootStore.setFileType(file.type); // Save the file type for conditional rendering
-            }}
-          />
+          {!rootStore.fileSrc && <>
+            <HiddenFileInput
+              id={"file"}
+              shouldProcess={false}
+              accept={"video/mp4,video/x-m4v,video/*,audio/mp3,audio/*"}
+              onChange={(file) => {
+                rootStore.setFile(file);
+                rootStore.setFileSrc(URL.createObjectURL(file));
+                rootStore.setFileType(file.type); // Save the file type for conditional rendering
+              }}
+            />
 
-          {!rootStore.fileSrc && <FileButton htmlFor={"file"} />}
+            <FileButton htmlFor={"file"} />
+          </>}
 
           {rootStore.fileSrc && (
             <div
@@ -128,10 +131,12 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
               <button
                 onClick={handleFileReset}
                 className={
-                  "text-center w-full gap-1 border border-white px-[10px] py-[8px] mt-2 text-sm"
+                  "flex w-full items-center justify-between gap-1 border border-white px-[10px] py-[8px]"
                 }
               >
-                Изменить выбор
+                <div />
+                <div className={"flex gap-2 text-sm"}>Изменить выбор</div>
+                <Replace />
               </button>
             </div>
           )}
@@ -151,13 +156,7 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
 
           {rootStore.allowCover && (
             <FormLabel label={"Обложка"}>
-              <HiddenFileInput
-                id={"cover"}
-                accept={"image/*"}
-                onChange={(cover) => {
-                  rootStore.setCover(cover);
-                }}
-              />
+
 
               {rootStore.cover ? (
                 <CoverButton
@@ -167,7 +166,16 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
                   }}
                 />
               ) : (
-                <FileButton htmlFor={"cover"} />
+                <>
+                  <HiddenFileInput
+                    id={"cover"}
+                    accept={"image/*"}
+                    onChange={(cover) => {
+                      rootStore.setCover(cover);
+                    }}
+                  />
+                  <FileButton htmlFor={"cover"} />
+                </>
               )}
             </FormLabel>
           )}
