@@ -2,7 +2,6 @@ import ReactPlayer from "react-player/lazy";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 
-import { Button } from "~/shared/ui/button";
 import { usePurchaseContent, useViewContent } from "~/shared/services/content";
 import { fromNanoTON } from "~/shared/utils";
 import {useCallback, useEffect, useMemo} from "react";
@@ -72,7 +71,43 @@ export const ViewContentPage = () => {
   }, []);
 
 
-
+  useEffect(() => {
+    const mainButton = WebApp.MainButton;
+    const secondaryButton = WebApp.SecondaryButton;
+    
+    try {
+      // Set main button color
+      mainButton.color = '#e40615'; 
+      mainButton.textColor = '#FFFFFF';
+  
+      // Set secondary button color
+      secondaryButton.color = '#363636';
+      secondaryButton.textColor = '#FFFFFF';
+      if (!haveLicense) {
+        mainButton.text = `Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`;
+        mainButton.show();
+        mainButton.onClick(handleBuyContent);
+      } else {
+        mainButton.hide();
+      }
+    
+      secondaryButton.text = 'Загрузить свой контент';
+      secondaryButton.show();
+      secondaryButton.onClick(() => {
+        WebApp.openTelegramLink('https://t.me/MY_UploaderRobot');
+      });
+    
+      return () => {
+        mainButton.hide();
+        mainButton.offClick(handleBuyContent);
+        secondaryButton.hide();
+        secondaryButton.offClick();
+      };
+    } catch (error) {
+      console.error('Error setting up Telegram WebApp buttons:', error);
+    }
+  }, [content, haveLicense, WebApp, handleBuyContent]);
+  
   return (
       <main className={"flex w-full flex-col gap-[50px] px-4"}>
         {content?.data?.content_type.startsWith("audio") && content?.data?.display_options?.metadata?.image && (
@@ -111,7 +146,7 @@ export const ViewContentPage = () => {
           </p>
         </section>
 
-        {!haveLicense && <Button
+        {/* {!haveLicense && <Button
             onClick={handleBuyContent}
             className={"mb-4 mt-[30px] h-[48px]"}
             label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`}
@@ -125,7 +160,7 @@ export const ViewContentPage = () => {
             }}
             className={"mb-4 mt-[-20px] h-[48px] bg-darkred"}
             label={`Загрузить свой контент`}
-        />
+        /> */}
       </main>
   );
 };

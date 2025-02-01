@@ -12,10 +12,22 @@ import { ConfirmModal } from "~/pages/root/steps/royalty-step/components/confirm
 import { useRootStore } from "~/shared/stores/root";
 import { BackButton } from "~/shared/ui/back-button";
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import { Address } from "@ton/core";
+import { FieldError } from "react-hook-form";
 
 type RoyaltyStepProps = {
   prevStep(): void;
   nextStep(): void;
+};
+
+const isValidTonAddress = (address: string): boolean => {
+  try {
+    if (!address) return false;
+    Address.parse(address);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
@@ -23,6 +35,7 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
 
   const [isDeleteAllOpen, setDeleteAllOpen] = useState(false);
   const [isSpreadOpen, setSpreadOpen] = useState(false);
+  const [addressErrors, setAddressErrors] = useState<Record<number, FieldError | undefined>>({});
 
   const { royalty, setRoyalty, isPercentHintOpen, setPercentHintOpen } =
     useRootStore();
@@ -42,11 +55,23 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
   };
 
   const handleWalletChange = (index: number, address: string) => {
+    const isValid = isValidTonAddress(address);
+    setAddressErrors({
+      ...addressErrors,
+      [index]: !isValid 
+        ? { 
+            type: 'validation',
+            message: 'Неверный адрес TON'
+          }
+        : undefined
+    });
+  
     const newRoyalty = royalty.map((member, i) =>
-      i === index ? { ...member, address } : member,
+      i === index ? { ...member, address } : member
     );
     setRoyalty(newRoyalty);
   };
+  
 
   const handlePercentChange = (index: number, value: string) => {
     const percentNumber = parseInt(value, 10) || 0;
@@ -67,20 +92,28 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
 
   const isValid = useMemo(() => {
     return (
-      royalty.every((member) => member.address && member.value >= 0) &&
+      royalty.every((member) => isValidTonAddress(member.address) && member.value >= 0) &&
       royalty.reduce((acc, curr) => acc + curr.value, 0) === 100
     );
   }, [royalty]);
 
   const [tonConnectUI] = useTonConnectUI();
-
   // Устанавливаем адрес из tonConnectUI.account при загрузке страницы
   useEffect(() => {
-    console.log('tonconnectUI', tonConnectUI)
-    if (tonConnectUI.account) {
-      setRoyalty([{ address: tonConnectUI.account.address, value: 100 }]);
+    if (!tonConnectUI.account) return;
+    
+    if (royalty.length === 0) {
+      // First initialization with 100%
+      setRoyalty([{
+        address: Address.parse(tonConnectUI.account.address).toString({
+          bounceable: true,
+          urlSafe: true,
+          testOnly: false,
+        }),
+        value: 100
+      }]);
     }
-  }, [tonConnectUI.account, setRoyalty]);
+  }, [tonConnectUI.account, setRoyalty, royalty]);
 
   return (
     <section className={"mt-4 px-4 pb-8"}>
@@ -128,7 +161,7 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
       <section className={"flex flex-col gap-1.5"}>
         {royalty.map((member, index) => (
           <div key={index} className={"flex flex-col gap-[20px]"}>
-            <div className={"flex w-full items-center gap-1"}>
+            <div className={"flex w-full items-start gap-1"}>
               <div className={"w-[83%]"}>
                 <FormLabel
                   labelClassName={"flex"}
@@ -145,7 +178,8 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
                     value={member.address}
                     onChange={(e) => handleWalletChange(index, e.target.value)}
                     placeholder={"[ Введите адрес криптокошелька TON ]"}
-                  />
+                    error={addressErrors[index]}
+                    />
                 </FormLabel>
               </div>
 

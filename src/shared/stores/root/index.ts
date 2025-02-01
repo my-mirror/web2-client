@@ -80,7 +80,7 @@ export const useRootStore = create<RootStore>((set) => ({
   royalty: [{ address: "", value: 100 }],
   setRoyalty: (royalty) => set({ royalty }),
 
-  price: 0,
+  price: 0.15,
   setPrice: (price: number) => set({ price }),
 
   allowResale: false,

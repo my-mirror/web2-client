@@ -8,6 +8,7 @@ type UseCreateNewContentPayload = {
   content: string;
   image: string;
   description: string;
+  hashtags: string[];
   price: string;
   resaleLicensePrice: string; // nanoTON bignum (default = 0)
   allowResale: boolean;

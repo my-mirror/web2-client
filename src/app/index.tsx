@@ -1,4 +1,5 @@
 import "~/app/styles/globals.css";
+import '~/shared/libs/buffer';
 
 import { useEffect } from "react";
 import { useExpand, useWebApp } from "@vkruglikov/react-telegram-web-app";

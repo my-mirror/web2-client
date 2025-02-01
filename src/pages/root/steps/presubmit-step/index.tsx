@@ -64,7 +64,7 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
         content: fileUploadResult.content_id_v1,
         image: coverUploadResult.content_id_v1,
         price: String(rootStore.price * 10 ** 9),
-
+        hashtags: rootStore.hashtags,
         royaltyParams: rootStore.royalty.map((member) => ({
           ...member,
           value: member.value * 100,
@@ -147,6 +147,24 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
                     }
                 >
                   {rootStore.author}
+                </div>
+              </FormLabel>
+          )}
+
+          {rootStore.author && (
+              <FormLabel label={"Теги"}>
+                <div
+                className="flex flex-wrap gap-1">
+                {rootStore.hashtags.map((tag, index) => (
+                  <div
+                  key={index}
+                  className={
+                    "bg-[#363636] text-white text-sm inline-flex items-center px-2 py-1 rounded mr-1"
+                  }
+              >
+                {tag}
+              </div>
+                ))}
                 </div>
               </FormLabel>
           )}
