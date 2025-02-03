@@ -77,7 +77,7 @@ export const useRootStore = create<RootStore>((set) => ({
   authors: [],
   setAuthors: (authors) => set({ authors }),
 
-  royalty: [{ address: "", value: 100 }],
+  royalty: [],
   setRoyalty: (royalty) => set({ royalty }),
 
   price: 0.15,

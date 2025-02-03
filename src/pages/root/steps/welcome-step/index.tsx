@@ -11,22 +11,27 @@ type WelcomeStepProps = {
 export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
   const [tonConnectUI] = useTonConnectUI();
   const [isLoaded, setLoaded] = useState(false);
-
+  
   console.log("💩💩💩 enter WelcomeStep");
 
   const auth = useAuth();
 
   console.log("💩💩💩 after useAuth");
-
-  const handleNextClick = async () => {
-    if (tonConnectUI.connected) {
-      await auth.mutateAsync();
-      nextStep();
-    } else {
+  
+const handleNextClick = async () => {
+  if (tonConnectUI.connected) {
+    await auth.mutateAsync();
+    nextStep();
+  } else {
+    try {
       await tonConnectUI.openModal();
       await auth.mutateAsync();
+      nextStep();
+    } catch (error) {
+      console.error('Failed to connect or authenticate:', error);
     }
-  };
+  }
+};
 
   // useEffect(() => {
   //   const first = setTimeout(async () => {
