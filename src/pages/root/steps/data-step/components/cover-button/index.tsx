@@ -1,8 +1,6 @@
 import { useHapticFeedback } from "@vkruglikov/react-telegram-web-app";
 import { Replace } from "~/shared/ui/icons/replace";
 
-import { XMark } from "~/shared/ui/icons/x-mark.tsx";
-
 type CoverButtonProps = {
   src: string;
   onClick(): void;

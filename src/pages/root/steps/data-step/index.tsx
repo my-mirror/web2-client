@@ -14,7 +14,6 @@ import { useRootStore } from "~/shared/stores/root";
 import { Checkbox } from "~/shared/ui/checkbox";
 import { AudioPlayer } from "~/shared/ui/audio-player";
 import { HashtagInput } from "~/shared/ui/hashtag-input";
-import { XMark } from "~/shared/ui/icons/x-mark";
 import { Replace } from "~/shared/ui/icons/replace";
 
 type DataStepProps = {
