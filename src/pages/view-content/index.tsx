@@ -74,16 +74,16 @@ export const ViewContentPage = () => {
 
 
   return (
-      <main className={"flex w-full flex-col gap-[50px] px-4"}>
-        {content?.data?.content_type.startsWith("audio") && content?.data?.display_options?.metadata?.image && (
-            <div className={"mt-[30px] h-[314px] w-full"}>
-              <img
-                  alt={"content_image"}
-                  className={"h-full w-full object-cover object-center"}
-                  src={content?.data?.display_options?.metadata?.image}
-              />
-            </div>
-        )}
+<main className={"min-h-screen flex w-full flex-col gap-[50px] px-4 "}>
+  {content?.data?.content_type.startsWith("audio") && content?.data?.display_options?.metadata?.image && (
+    <div className={"mt-[30px] h-[314px] w-full"}>
+      <img
+        alt={"content_image"}
+        className={"h-full w-full object-cover object-center"}
+        src={content?.data?.display_options?.metadata?.image}
+      />
+    </div>
+  )}
 
         {content?.data?.content_type.startsWith("audio") ? (
             <AudioPlayer src={content?.data?.display_options?.content_url} />
@@ -111,21 +111,23 @@ export const ViewContentPage = () => {
           </p>
         </section>
 
+        <div className="mt-auto pb-2">
         {!haveLicense && <Button
-            onClick={handleBuyContent}
-            className={"mb-4 mt-[30px] h-[48px]"}
-            label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`}
-            includeArrows={true}
-        />
-        }
+              onClick={handleBuyContent}
+              className={"mb-4 h-[48px]"}
+              label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`}
+              includeArrows={true}
+          />
+          }
 
-        <Button
-            onClick={() => {
-              WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
-            }}
-            className={"mb-4 mt-[-20px] h-[48px] bg-darkred"}
-            label={`Загрузить свой контент`}
-        />
+          <Button
+              onClick={() => {
+                WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
+              }}
+              className={"h-[48px] bg-darkred"}
+              label={`Загрузить свой контент`}
+          />
+       </div>
       </main>
   );
 };

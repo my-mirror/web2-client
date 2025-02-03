@@ -13,7 +13,7 @@ type RootStore = {
   setAuthor: (author: string) => void;
 
   file: File | null;
-  setFile: (file: File) => void;
+  setFile: (file: File | null) => void;
 
   fileType: string;
   setFileType: (type: string) => void;
@@ -77,10 +77,10 @@ export const useRootStore = create<RootStore>((set) => ({
   authors: [],
   setAuthors: (authors) => set({ authors }),
 
-  royalty: [{ address: "", value: 100 }],
+  royalty: [],
   setRoyalty: (royalty) => set({ royalty }),
 
-  price: 0,
+  price: 0.15,
   setPrice: (price: number) => set({ price }),
 
   allowResale: false,

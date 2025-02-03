@@ -9,10 +9,10 @@ import { Button } from "~/shared/ui/button";
 import { useRootStore } from "~/shared/stores/root";
 import { BackButton } from "~/shared/ui/back-button";
 
-const MIN_PRICE = 0.07;
-const MIN_RESALE_PRICE = 0.07;
+const MIN_PRICE = 0.15;
+const MIN_RESALE_PRICE = 0.15;
 
-const RECOMMENDED_PRICE = 0.15;
+// const RECOMMENDED_PRICE = 0.15;
 // const RECOMMENDED_RESALE_PRICE = 0.15;
 
 type PriceStepProps = {
@@ -25,9 +25,9 @@ export const PriceStep = ({ nextStep, prevStep }: PriceStepProps) => {
 
   const formSchema = useMemo(() => {
     const parsePrice = (value: unknown) => {
-      if (typeof value === "string") {
-        // Replace commas with dots and parse the value
-        const parsedValue = parseFloat(value.replace(",", "."));
+      if (typeof value === "string" || typeof value === "number") {
+        const stringValue = value.toString().replace(",", ".");
+        const parsedValue = parseFloat(stringValue);
         return isNaN(parsedValue) ? undefined : parsedValue;
       }
       return undefined;
@@ -37,10 +37,10 @@ export const PriceStep = ({ nextStep, prevStep }: PriceStepProps) => {
       return z.object({
         price: z.preprocess(
             parsePrice,
-            z.number().min(MIN_PRICE, `Цена должна быть минимум ${MIN_PRICE} TON.`)
+            z.number({required_error: 'Цена не соответствует требованиям'}).min(MIN_PRICE, `Цена должна быть минимум ${MIN_PRICE} TON.`)
         ),
         resaleLicensePrice: z
-            .preprocess(parsePrice, z.number().min(MIN_RESALE_PRICE, `Цена копии должна быть минимум ${MIN_RESALE_PRICE} TON.`))
+            .preprocess(parsePrice, z.number({required_error: 'Цена не соответствует требованиям'}).min(MIN_RESALE_PRICE, `Цена копии должна быть минимум ${MIN_RESALE_PRICE} TON.`))
             .optional(),
       });
     }
@@ -48,7 +48,7 @@ export const PriceStep = ({ nextStep, prevStep }: PriceStepProps) => {
     return z.object({
       price: z.preprocess(
           parsePrice,
-          z.number().min(MIN_PRICE, `Цена должна быть минимум ${MIN_PRICE} TON.`)
+          z.number({required_error: 'Цена не соответствует требованиям'}).min(MIN_PRICE, `Цена должна быть минимум ${MIN_PRICE} TON.`)
       ),
     });
   }, [rootStore.allowResale]);
@@ -59,9 +59,9 @@ export const PriceStep = ({ nextStep, prevStep }: PriceStepProps) => {
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: {
-      price: rootStore.price,
+      price: rootStore.price || MIN_PRICE,
       //@ts-expect-error Fix typings
-      resaleLicensePrice: rootStore?.licenseResalePrice,
+      resaleLicensePrice: rootStore?.licenseResalePrice || MIN_RESALE_PRICE,
     },
   });
 
@@ -98,13 +98,22 @@ export const PriceStep = ({ nextStep, prevStep }: PriceStepProps) => {
           <FormLabel label={"Цена продажи TON"}>
             <div className={"my-2 flex flex-col gap-1.5"}>
               <p className={"text-xs"}>Минимальная стоимость {MIN_PRICE} TON.</p>
-              <p className={"text-xs"}>Рекомендуемая стоимость {RECOMMENDED_PRICE} TON.</p>
+              {/* <p className={"text-xs"}>Рекомендуемая стоимость {RECOMMENDED_PRICE} TON.</p> */}
             </div>
             <Input
                 error={form.formState.errors?.price}
                 placeholder={"[ Введите цену ]"}
-                {...form.register("price")}
-            />
+                inputMode="decimal"
+                pattern="[0-9]*[.,]?[0-9]*"
+                {...form.register("price", {
+                onChange: (e) => {
+                  const value = e.target.value;
+                  if (!/^\d*[.,]?\d*$/.test(value)) {
+                    e.target.value = value.replace(/[^\d.,]/g, '');
+                  }
+                }
+               })}
+  />
           </FormLabel>
         </div>
         <Button

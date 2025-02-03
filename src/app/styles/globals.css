@@ -26,18 +26,26 @@
   /*Input Range*/
   /* Custom styles for the range input */
   input[type="range"] {
-    -webkit-appearance: none; /* Remove default appearance */
-    width: 100%; /* Full width */
-    height: 2px; /* Track height */
-    background: linear-gradient(
-            to right,
-            white 0%, /* Start color of passed track */
-            white var(--value-percentage, 0%), /* End color of passed track */
-            gray var(--value-percentage, 0%), /* Start color of remaining track */
-            gray 100% /* End color of remaining track */
-    );
-    border-radius: 9999px; /* Rounded-full track */
-    outline: none; /* Remove outline */
+    -webkit-appearance: none;
+    /* Remove default appearance */
+    width: 100%;
+    /* Full width */
+    height: 2px;
+    /* Track height */
+    background: linear-gradient(to right,
+        white 0%,
+        /* Start color of passed track */
+        white var(--value-percentage, 0%),
+        /* End color of passed track */
+        gray var(--value-percentage, 0%),
+        /* Start color of remaining track */
+        gray 100%
+        /* End color of remaining track */
+      );
+    border-radius: 9999px;
+    /* Rounded-full track */
+    outline: none;
+    /* Remove outline */
     transition: background 0.3s;
   }
 
@@ -45,45 +53,64 @@
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 9px; /* Thumb width */
-    height: 9px; /* Thumb height */
-    background: #fff; /* Thumb color (blue-500) */
-    border-radius: 9999px; /* Rounded-full thumb */
-    cursor: pointer; /* Pointer cursor on hover */
+    width: 9px;
+    /* Thumb width */
+    height: 9px;
+    /* Thumb height */
+    background: #fff;
+    /* Thumb color (blue-500) */
+    border-radius: 9999px;
+    /* Rounded-full thumb */
+    cursor: pointer;
+    /* Pointer cursor on hover */
     transition: background 0.3s;
   }
 
   /* For Firefox */
   input[type="range"]::-moz-range-thumb {
     appearance: none;
-    width: 9px; /* Thumb width */
-    height: 9px; /* Thumb height */
-    background: #fff; /* Thumb color (blue-500) */
-    border-radius: 9999px; /* Rounded-full thumb */
-    cursor: pointer; /* Pointer cursor on hover */
+    width: 9px;
+    /* Thumb width */
+    height: 9px;
+    /* Thumb height */
+    background: #fff;
+    /* Thumb color (blue-500) */
+    border-radius: 9999px;
+    /* Rounded-full thumb */
+    cursor: pointer;
+    /* Pointer cursor on hover */
     transition: background 0.3s;
   }
 
   input[type="range"]::-moz-range-track {
-    -webkit-appearance: none; /* Remove default appearance */
-    width: 100%; /* Full width */
-    height: 2px; /* Track height */
-    background: linear-gradient(
-            to right,
-            white 0%, /* Start color of passed track */
-            white var(--value-percentage, 0%), /* End color of passed track */
-            gray var(--value-percentage, 0%), /* Start color of remaining track */
-            gray 100% /* End color of remaining track */
-    );
-    border-radius: 9999px; /* Rounded-full track */
-    outline: none; /* Remove outline */
+    -webkit-appearance: none;
+    /* Remove default appearance */
+    width: 100%;
+    /* Full width */
+    height: 2px;
+    /* Track height */
+    background: linear-gradient(to right,
+        white 0%,
+        /* Start color of passed track */
+        white var(--value-percentage, 0%),
+        /* End color of passed track */
+        gray var(--value-percentage, 0%),
+        /* Start color of remaining track */
+        gray 100%
+        /* End color of remaining track */
+      );
+    border-radius: 9999px;
+    /* Rounded-full track */
+    outline: none;
+    /* Remove outline */
     transition: background 0.3s;
   }
 
   /* English comment: override react-tag-input classes */
   .ReactTags__tagInputField {
-    @apply bg-transparent text-gray placeholder:text-gray outline-none w-full h-8;
-    @apply border border-white py-[20px] !important;
+    @apply bg-[#2B2B2B] outline-none w-full h-8 text-sm !important;
+    @apply border border-white px-[10px] py-[18px] !important;
+    @apply whitespace-pre !important;
     /* English comment: 
        'bg-transparent' to blend with your dark background 
        'text-white' to have white text 
@@ -94,7 +121,7 @@
 
   /* English comment: style for the tag itself when it's rendered */
   .ReactTags__selected .ReactTags__tag {
-    @apply bg-[#363636] text-white text-sm inline-flex items-center px-2 py-1 rounded mr-1;
+    @apply bg-[#363636] text-white text-sm inline-flex items-center px-2 py-1 mb-2 rounded mr-1 !important;
     /* English comment:
        'bg-[#363636]' to have a dark gray background
        'text-white' keeps the text white 
@@ -105,7 +132,7 @@
   }
 
   .ReactTags__selected .ReactTags__remove {
-    @apply ml-1 text-gray hover:text-white cursor-pointer;
+    @apply ml-1 text-gray hover:text-white cursor-pointer !important;
     /* English comment:
        'ml-1' a small margin to separate the 'x' or close symbol
        'text-gray-400' by default, and change to white on hover

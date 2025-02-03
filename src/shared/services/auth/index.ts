@@ -13,80 +13,103 @@ export const useAuth = () => {
   const [tonConnectUI] = useTonConnectUI();
   const interval = useRef<ReturnType<typeof setInterval> | undefined>();
 
+  const waitForWalletProof = async () => {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error("Timeout waiting for proof")), 30000);
+      const checkProof = setInterval(() => {
+        const currentWallet = tonConnectUI.wallet;
+        if (
+          currentWallet?.connectItems?.tonProof && 
+          !("error" in currentWallet.connectItems.tonProof)
+        ) {
+          clearInterval(checkProof);
+          clearTimeout(timeout);
+          resolve(currentWallet.connectItems.tonProof.proof);
+        }
+      }, 500);
+    });
+  };
+
+  const makeAuthRequest = async (params: {
+    twa_data: string;
+    ton_proof?: {
+      account: any;
+      ton_proof: any;
+    };
+  }) => {
+    const res = await request.post<{
+      connected_wallet: null | {
+        version: string;
+        address: string;
+        ton_balance: string;
+      };
+      auth_v1_token: string;
+    }>("/auth.twa", params);
+
+    if (res?.data?.auth_v1_token) {
+      localStorage.setItem(sessionStorageKey, res.data.auth_v1_token);
+    } else {
+      throw new Error("Failed to get auth token");
+    }
+    return res;
+  };
+
   return useMutation(["auth"], async () => {
     clearInterval(interval.current);
+    console.log("DEBUG: Starting auth flow");
 
-    if (!wallet) {
+    // Case 1: Not connected - need to connect and get proof
+    if (!tonConnectUI.connected) {
+      console.log("DEBUG: No wallet connection, starting flow");
       localStorage.removeItem(sessionStorageKey);
 
       const refreshPayload = async () => {
         tonConnectUI.setConnectRequestParameters({ state: "loading" });
-
-        const value = await request
-            .post<{
-              auth_v1_token: string;
-            }>("/auth.twa", {
-              twa_data: WebApp.initData,
-            })
-            .catch((error: any) => {
-              console.error("Error in authentication request: ", error);
-              throw new Error("Failed to authenticate.");
-            });
-        if (!value) {
-          tonConnectUI.setConnectRequestParameters(null);
-        } else {
+        const value = await request.post<{ auth_v1_token: string }>("/auth.twa", {
+          twa_data: WebApp.initData,
+        });
+        
+        if (value?.data?.auth_v1_token) {
           tonConnectUI.setConnectRequestParameters({
             state: "ready",
-            value: {
-              tonProof: value?.data?.auth_v1_token,
-            },
+            value: { tonProof: value.data.auth_v1_token },
           });
+        } else {
+          tonConnectUI.setConnectRequestParameters(null);
         }
       };
 
-      void refreshPayload();
-      setInterval(refreshPayload, payloadTTLMS);
+      await refreshPayload();
+      interval.current = setInterval(refreshPayload, payloadTTLMS);
 
-      return;
+      const tonProof = await waitForWalletProof();
+      console.log("DEBUG: Got initial proof", tonProof);
+
+      return makeAuthRequest({
+        twa_data: WebApp.initData,
+        ton_proof: {
+          account: tonConnectUI.wallet!.account,
+          ton_proof: tonProof,
+        },
+      });
     }
 
-    if (
-        wallet.connectItems?.tonProof &&
-        !("error" in wallet.connectItems.tonProof)
-    ) {
-      const tonProof = wallet.connectItems.tonProof.proof;
-
-      console.log("DEBUG TON-PROOF", tonProof);
-
-      request
-          .post<{
-            connected_wallet: null | {
-              version: string;
-              address: string;
-              ton_balance: string;
-            };
-            auth_v1_token: string;
-          }>("/auth.twa", {
-            twa_data: WebApp.initData,
-            ton_proof: {
-              account: wallet.account,
-              ton_proof: tonProof,
-            },
-          })
-          .then((res) => {
-            if (res?.data?.auth_v1_token) {
-              localStorage.setItem(sessionStorageKey, res?.data?.auth_v1_token);
-            } else {
-              alert("Please try another wallet");
-            }
-          })
-          .catch((error: any) => {
-            console.error("Error in authentication request: ", error);
-            throw new Error("Failed to authenticate.");
-          });
-    } else {
-      void tonConnectUI.disconnect();
-      localStorage.removeItem(sessionStorageKey)
+    // Case 2: Connected with proof - use it
+    if (wallet?.connectItems?.tonProof && !("error" in wallet.connectItems.tonProof)) {
+      console.log("DEBUG: Using existing proof");
+      return makeAuthRequest({
+        twa_data: WebApp.initData,
+        ton_proof: {
+          account: wallet.account,
+          ton_proof: wallet.connectItems.tonProof.proof,
+        },
+      });
     }
+
+    // Case 3: Connected without proof - already authenticated
+    console.log("DEBUG: Connected without proof, proceeding without it");
+    return makeAuthRequest({
+      twa_data: WebApp.initData,
+    });
   });
 };

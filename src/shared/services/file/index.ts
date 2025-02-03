@@ -21,12 +21,12 @@ export const useUploadFile = () => {
       }>("/storage", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: localStorage.getItem('auth_v1_token') ?? ""
+          Authorization: localStorage.getItem('auth_v1_token') || ""
         },
 
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / (progressEvent?.total as number) ??
+            (progressEvent.loaded * 100) / (progressEvent?.total as number) ||
               0,
           );
           setUploadProgress(percentCompleted);

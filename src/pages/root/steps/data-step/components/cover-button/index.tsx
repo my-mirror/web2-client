@@ -1,4 +1,5 @@
 import { useHapticFeedback } from "@vkruglikov/react-telegram-web-app";
+import { Replace } from "~/shared/ui/icons/replace";
 
 import { XMark } from "~/shared/ui/icons/x-mark.tsx";
 
@@ -36,8 +37,8 @@ export const CoverButton = ({ src, onClick }: CoverButtonProps) => {
         }
       >
         <div />
-        <div className={"flex gap-2 text-sm"}>Удалить</div>
-        <XMark />
+        <div className={"flex gap-2 text-sm"}>Изменить</div>
+        <Replace />
       </button>
     </div>
   );

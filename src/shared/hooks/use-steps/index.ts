@@ -1,4 +1,8 @@
-import { ReactNode, useMemo, useState } from "react";
+import { useTonConnectUI } from "@tonconnect/ui-react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
+
+const CHECK_INTERVAL = 20000;
+
 
 export const useSteps = (
   sections: ({
@@ -9,15 +13,24 @@ export const useSteps = (
     prevStep(): void;
   }) => ReactNode[],
 ) => {
+
+  const [tonConnectUI] = useTonConnectUI();
+  
   const [step, setStep] = useState(0);
-
-  const nextStep = () => {
-    return setStep((s) => s + 1);
-  };
-
-  const prevStep = () => {
-    return setStep((s) => s - 1);
-  };
+  
+  // If connection is lost, reset the step
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!tonConnectUI.connected && step !== 0) {
+        setStep(0);
+      }
+    }, CHECK_INTERVAL);
+  
+    return () => clearInterval(interval);
+  }, []);
+  
+  const nextStep = () => setStep((s) => s + 1);
+  const prevStep = () => setStep((s) => s - 1);
 
   const ActiveSection = useMemo(() => {
     return sections({ nextStep, prevStep })[step];
