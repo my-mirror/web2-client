@@ -5,9 +5,11 @@ import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 import { Button } from "~/shared/ui/button";
 import { usePurchaseContent, useViewContent } from "~/shared/services/content";
 import { fromNanoTON } from "~/shared/utils";
-import {useCallback, useEffect, useMemo} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import { AudioPlayer } from "~/shared/ui/audio-player";
 import {useAuth} from "~/shared/services/auth";
+import { CongratsModal } from "./components/congrats-modal";
+import { ErrorModal } from "./components/error-modal";
 
 export const ViewContentPage = () => {
   const WebApp = useWebApp();
@@ -20,8 +22,8 @@ export const ViewContentPage = () => {
 
   const auth = useAuth();
 
-
-
+  const [isCongratsModal, setIsCongratsModal] = useState(false);
+  const [isErrorModal, setIsErrorModal] = useState(false);
   const handleBuyContent = useCallback(async () => {
     try {
       if (!tonConnectUI.connected) {
@@ -50,11 +52,14 @@ export const ViewContentPage = () => {
 
       if (transactionResponse.boc) {
         void refetchContent()
+        setIsCongratsModal(true);
         console.log(transactionResponse.boc, "PURCHASED")
       } else {
+        setIsErrorModal(true);
         console.error("Transaction failed:", transactionResponse);
       }
     } catch (error) {
+      setIsErrorModal(true);
       console.error("Error handling Ton Connect subscription:", error);
     }
   }, [content, tonConnectUI.connected]);
@@ -71,19 +76,28 @@ export const ViewContentPage = () => {
     return () => clearInterval(interval)
   }, []);
 
+  const handleConfirmCongrats = () => {
+    setIsCongratsModal(!isCongratsModal);
+  };
 
-
+  const handleErrorModal = () => {
+    setIsErrorModal(!isErrorModal);
+  }
   return (
-<main className={"min-h-screen flex w-full flex-col gap-[50px] px-4 "}>
-  {content?.data?.content_type.startsWith("audio") && content?.data?.display_options?.metadata?.image && (
-    <div className={"mt-[30px] h-[314px] w-full"}>
-      <img
-        alt={"content_image"}
-        className={"h-full w-full object-cover object-center"}
-        src={content?.data?.display_options?.metadata?.image}
-      />
-    </div>
-  )}
+      <main className={"min-h-screen flex w-full flex-col gap-[50px] px-4 "}>
+        {isCongratsModal && <CongratsModal
+                  onConfirm={handleConfirmCongrats}/>}
+        {isErrorModal && <ErrorModal
+        onConfirm={handleErrorModal}/>}
+        {content?.data?.content_type.startsWith("audio") && content?.data?.display_options?.metadata?.image && (
+          <div className={"mt-[30px] h-[314px] w-full"}>
+            <img
+              alt={"content_image"}
+              className={"h-full w-full object-cover object-center"}
+              src={content?.data?.display_options?.metadata?.image}
+            />
+          </div>
+        )}
 
         {content?.data?.content_type.startsWith("audio") ? (
             <AudioPlayer src={content?.data?.display_options?.content_url} />

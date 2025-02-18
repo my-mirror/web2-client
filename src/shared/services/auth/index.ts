@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
+import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useMutation } from "react-query";
 import { request } from "~/shared/libs";
 import { useWebApp } from "@vkruglikov/react-telegram-web-app";
@@ -9,7 +9,7 @@ const payloadTTLMS = 1000 * 60 * 20;
 
 export const useAuth = () => {
   const WebApp = useWebApp();
-  const wallet = useTonWallet();
+  // const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
   const interval = useRef<ReturnType<typeof setInterval> | undefined>();
 
@@ -94,17 +94,20 @@ export const useAuth = () => {
       });
     }
 
+    // Commented this part for two reasons:
+    // 1) When we include ton_proof from the wallet it fails the call for a reason of bad ton_proof
+    // 2) This call could happen only if the first case happened and it means that the ton_proof is already have been stored once before
     // Case 2: Connected with proof - use it
-    if (wallet?.connectItems?.tonProof && !("error" in wallet.connectItems.tonProof)) {
-      console.log("DEBUG: Using existing proof");
-      return makeAuthRequest({
-        twa_data: WebApp.initData,
-        ton_proof: {
-          account: wallet.account,
-          ton_proof: wallet.connectItems.tonProof.proof,
-        },
-      });
-    }
+    // if (wallet?.connectItems?.tonProof && !("error" in wallet.connectItems.tonProof)) {
+    //   console.log("DEBUG: Using existing proof", wallet.connectItems.tonProof.proof);
+    //   return makeAuthRequest({
+    //     twa_data: WebApp.initData,
+    //     ton_proof: {
+    //       account: wallet.account,
+    //       ton_proof: wallet.connectItems.tonProof.proof,
+    //     },
+    //   });
+    // }
 
     // Case 3: Connected without proof - already authenticated
     console.log("DEBUG: Connected without proof, proceeding without it");

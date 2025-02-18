@@ -1,3 +1,4 @@
+import './shared/services/sentry/index.ts';
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 

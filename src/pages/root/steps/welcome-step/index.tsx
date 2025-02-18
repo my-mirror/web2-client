@@ -11,28 +11,51 @@ type WelcomeStepProps = {
 export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
   const [tonConnectUI] = useTonConnectUI();
   const [isLoaded, setLoaded] = useState(false);
-  
+  const [isConnected, setIsConnected] = useState(tonConnectUI.connected);
+
   console.log("💩💩💩 enter WelcomeStep");
 
   const auth = useAuth();
 
   console.log("💩💩💩 after useAuth");
   
-const handleNextClick = async () => {
-  if (tonConnectUI.connected) {
-    await auth.mutateAsync();
-    nextStep();
-  } else {
-    try {
-      await tonConnectUI.openModal();
+  useEffect(() => {
+    localStorage.setItem('disclaimerAccepted', 'false');
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
+      setIsConnected(!!wallet);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [tonConnectUI]);
+
+  const handleNextClick = async () => {
+    if (tonConnectUI.connected) {
       await auth.mutateAsync();
       nextStep();
-    } catch (error) {
-      console.error('Failed to connect or authenticate:', error);
+    } else {
+      try {
+        await tonConnectUI.openModal();
+        await auth.mutateAsync();
+      } catch (error) {
+        console.error('Failed to connect or authenticate:', error);
+      }
+    }
+  };
+
+  const handleDisconnect = async () => {
+    if (isConnected){
+      try {
+        await tonConnectUI.disconnect();
+      } catch (error) {
+        console.error('Failed to disconnect:', error);
+      }
     }
   }
-};
-
   // useEffect(() => {
   //   const first = setTimeout(async () => {
   //     console.log("💩💩💩 call auth");
@@ -74,8 +97,8 @@ const handleNextClick = async () => {
   }
 
   return (
-    <section className={"mt-4 flex flex-col px-4"}>
-      <div className={"flex items-center justify-center"}>
+    <section className={"mt-4 flex flex-col justify-between min-h-[calc(100vh-32px)] px-4"}>
+      <div className="flex items-center justify-center overflow-hidden w-[100%] h-[400px]">
         <img
           alt={"splash"}
           className={" w-full shrink-0"}
@@ -83,30 +106,65 @@ const handleNextClick = async () => {
         />
       </div>
 
-      <div className={"flex gap-2 text-sm"}>
-        <span>/ Добро пожаловать в MY</span>
+      <div className={"flex flex-col mt-4"}>
+        <div className={"flex gap-2 text-sm"}>
+          <span>/ Добро пожаловать в MY</span>
 
-        <div className={"flex items-center gap-0"}>
-          <span>[</span>
-          <div className={"mb-0.5 h-3 w-3 rounded-full bg-primary"} />
-          <span>]:</span>
+          <div className={"flex items-center gap-0"}>
+            <span>[</span>
+            <div className={"mb-0.5 h-3 w-3 rounded-full bg-primary"} />
+            <span>]:</span>
+          </div>
         </div>
-      </div>
 
-      <div className={"mt-2"}>
-        <p className={"text-sm"}>
-          децентрализованную систему монетизации контента. для продолжения
-          необходимо подключить криптокошелек TON
-        </p>
+        
+          {isConnected ?
+            <>
+              <div className={"mt-2"}>
+                <p className={"text-sm"}>
+                  Вы зарегистрированы под кошельком: 
+                  <span className={"font-bold pl-1"}>{tonConnectUI.account?.address.slice(2, 9)}...{tonConnectUI.account?.address.slice(-4)}</span>
+                </p>
+              </div>
+              <div className="flex flex-col">
+                  <Button
+                    className={"mt-[30px]"}
+                    label={"Продолжить"}
+                    includeArrows={false}
+                    isLoading={auth.isLoading}
+                    onClick={handleNextClick}
+                  />
+                  <Button
+                    className={"mt-[20px] bg-inherit"}
+                    label={"Изменить кошелек"}
+                    includeArrows={false}
+                    isLoading={false}
+                    onClick={handleDisconnect}
+                  />
+              </div>
+            </>
+          :
+            <>
+              <div className={"mt-2"}>
+                <p className={"text-sm"}>
+                  Здесь вы можете загрузить свой контент. <br/> Для продолжения подключите кошелек.
+                </p>
+              </div>
+              <div className={"mt-2"}>
+                <p className={"text-sm"}>
+                  Не волнуйтесь. Вы сможете поменять свой выбор в любой момент.
+                </p>
+              </div>
+              <Button
+                className={"mt-[30px]"}
+                label={"Подключить криптокошелёк TON"}
+                includeArrows={true}
+                isLoading={auth.isLoading}
+                onClick={handleNextClick}
+              />
+            </>}
+        
       </div>
-
-      <Button
-        className={"mt-[30px]"}
-        label={"Подключить криптокошелёк TON"}
-        includeArrows={true}
-        isLoading={auth.isLoading}
-        onClick={handleNextClick}
-      />
     </section>
   );
 };

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,6 +15,7 @@ import { Checkbox } from "~/shared/ui/checkbox";
 import { AudioPlayer } from "~/shared/ui/audio-player";
 import { HashtagInput } from "~/shared/ui/hashtag-input";
 import { Replace } from "~/shared/ui/icons/replace";
+import { DisclaimerModal } from "./components/disclaimer-modal";
 
 type DataStepProps = {
   nextStep(): void;
@@ -22,6 +23,8 @@ type DataStepProps = {
 
 export const DataStep = ({ nextStep }: DataStepProps) => {
   const rootStore = useRootStore();
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+
 
   const formSchema = useMemo(() => {
     return z.object({
@@ -64,8 +67,28 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
     rootStore.setFileType('');
   }
 
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem('disclaimerAccepted');
+    if (storedValue === 'true') {
+      setDisclaimerAccepted(true);
+    }
+  }, []);
+  
+  const handleConfirmDisclaimer = () => {
+    setDisclaimerAccepted(true);
+    localStorage.setItem('disclaimerAccepted', 'true');
+  };
+
   return (
     <section className={"mt-4 px-4 pb-8"}>
+
+      {(rootStore.fileSrc && !disclaimerAccepted) &&
+       (<DisclaimerModal
+          onConfirm={() => {
+            handleConfirmDisclaimer()}}
+          />)}
+
       <div className={"mb-[30px] flex flex-col text-sm"}>
         <span className={"ml-4"}>/Заполните информацию о контенте</span>
         <div>
