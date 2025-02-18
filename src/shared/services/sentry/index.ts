@@ -7,8 +7,9 @@ import {
   useNavigationType,
 } from "react-router-dom";
 
+
 Sentry.init({
-  dsn: import.meta.env.SENTRY_DSN,
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
     // See docs for support of different versions of variation of react router
     // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
