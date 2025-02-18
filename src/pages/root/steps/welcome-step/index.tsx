@@ -3,6 +3,7 @@ import { useTonConnectUI } from "@tonconnect/ui-react";
 
 import { Button } from "~/shared/ui/button";
 import { useAuth } from "~/shared/services/auth";
+import { Address } from "@ton/core";
 
 type WelcomeStepProps = {
   nextStep(): void;
@@ -12,7 +13,7 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
   const [tonConnectUI] = useTonConnectUI();
   const [isLoaded, setLoaded] = useState(false);
   const [isConnected, setIsConnected] = useState(tonConnectUI.connected);
-
+  const [address, setAddress] = useState('');
   console.log("💩💩💩 enter WelcomeStep");
 
   const auth = useAuth();
@@ -32,6 +33,16 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
       unsubscribe();
     };
   }, [tonConnectUI]);
+
+  useEffect(() => {
+    if(tonConnectUI.account){
+      setAddress(Address.parse(tonConnectUI.account?.address).toString({
+        bounceable: false,
+        urlSafe: true,
+        testOnly: false,
+      }),)
+    }
+  }, [tonConnectUI.account]);
 
   const handleNextClick = async () => {
     if (tonConnectUI.connected) {
@@ -122,8 +133,8 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
             <>
               <div className={"mt-2"}>
                 <p className={"text-sm"}>
-                  Вы зарегистрированы под кошельком: 
-                  <span className={"font-bold pl-1"}>{tonConnectUI.account?.address.slice(2, 9)}...{tonConnectUI.account?.address.slice(-4)}</span>
+                  Вы зарегистрированы под кошельком: <br/>
+                  <span className={"font-bold"}>{address}</span>
                 </p>
               </div>
               <div className="flex flex-col">

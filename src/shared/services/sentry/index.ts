@@ -7,7 +7,7 @@ import {
   useNavigationType,
 } from "react-router-dom";
 
-
+console.log(import.meta.env);
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
@@ -22,22 +22,23 @@ Sentry.init({
     }),
     Sentry.replayIntegration(),
   ],
-
+  enabled: import.meta.env.PROD, // Only enable in production
+  environment: import.meta.env.MODE, // Set the environment
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for tracing.
   // Learn more at
   // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0,
 
   // Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
   tracePropagationTargets: [
-    /^\//, 
-    new RegExp(`^${import.meta.env.VITE_API_BASE_URL}`),
+    // /^\//, 
+    // new RegExp(`^${import.meta.env.VITE_API_BASE_URL}`),
   ],
   // Capture Replay for 10% of all sessions,
   // plus for 100% of sessions with an error
   // Learn more at
   // https://docs.sentry.io/platforms/javascript/session-replay/configuration/#general-integration-configuration
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
+  replaysSessionSampleRate: 0,
+  replaysOnErrorSampleRate: 0,
 });

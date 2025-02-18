@@ -28,7 +28,7 @@ export const ErrorModal = ({
           }
         >
             <p className="mt-12">
-              <span className="px-1 font-bold">Ошибка запроса транзакции</span>
+              <span className="font-bold">Ошибка запроса транзакции</span>
             </p>
             <p className="">
                 Не удалось отправить запрос на выполнение транзакции.

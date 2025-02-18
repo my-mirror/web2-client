@@ -134,13 +134,24 @@ export const ViewContentPage = () => {
           />
           }
 
-          <Button
-              onClick={() => {
-                WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
-              }}
-              className={"h-[48px] bg-darkred"}
-              label={`Загрузить свой контент`}
-          />
+          {tonConnectUI.connected && (
+            <>
+              <Button
+                onClick={() => {
+                  WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
+                }}
+                className={"h-[48px] bg-darkred"}
+                label={`Загрузить свой контент`}
+              />
+              <Button
+                  onClick={() => {
+                    tonConnectUI.disconnect();
+                  }}
+                  className={"h-[48px] bg-darkred mt-4"}
+                  label={`Отключить кошелек`}
+              />
+            </>
+          )}
        </div>
       </main>
   );
