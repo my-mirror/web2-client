@@ -27,7 +27,7 @@ Sentry.init({
   // of transactions for tracing.
   // Learn more at
   // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
-  tracesSampleRate: 0,
+  tracesSampleRate: 1,
 
   // Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
   tracePropagationTargets: [
