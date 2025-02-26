@@ -102,7 +102,7 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
       <section
         className={"relative flex h-[100vh] items-center justify-center"}
       >
-        <img alt={"splash"} className={"mb-20 h-[400px]"} src={"/splash.gif"} />
+        <img alt={"splash"} className={"mb-20 w-[50%]"} src={"/splash.gif"} />
       </section>
     );
   }
@@ -112,7 +112,7 @@ export const WelcomeStep = ({ nextStep }: WelcomeStepProps) => {
       <div className="flex items-center justify-center overflow-hidden w-[100%] h-[400px]">
         <img
           alt={"splash"}
-          className={" w-full shrink-0"}
+          className={"w-[50%] shrink-0"}
           src={"/splash.gif"}
         />
       </div>
