@@ -11,6 +11,15 @@ import {useAuth} from "~/shared/services/auth";
 import { CongratsModal } from "./components/congrats-modal";
 import { ErrorModal } from "./components/error-modal";
 
+type InvoiceStatus = 'paid' | 'failed' | 'cancelled' | 'pending';
+
+// Add type for invoice event
+interface InvoiceEvent {
+  url: string;
+  status: InvoiceStatus;
+}
+
+
 export const ViewContentPage = () => {
   const WebApp = useWebApp();
 
@@ -24,7 +33,7 @@ export const ViewContentPage = () => {
 
   const [isCongratsModal, setIsCongratsModal] = useState(false);
   const [isErrorModal, setIsErrorModal] = useState(false);
-  const handleBuyContent = useCallback(async () => {
+  const handleBuyContentTON = useCallback(async () => {
     try {
       if (!tonConnectUI.connected) {
         await tonConnectUI.openModal();
@@ -63,6 +72,49 @@ export const ViewContentPage = () => {
       console.error("Error handling Ton Connect subscription:", error);
     }
   }, [content, tonConnectUI.connected]);
+
+  const handleBuyContentStars = useCallback(async () => {
+    try {
+      if (!content?.data?.invoice.url) {
+        console.error('No invoice URL available');
+        return;
+      }
+  
+      // Add event listener for invoice closing with typed event
+      const handleInvoiceClosed = (event: InvoiceEvent) => {
+        if (event.url === content.data.invoice.url) {
+          if (event.status === 'paid') {
+            void refetchContent();
+            setIsCongratsModal(true);
+          } else if (event.status === 'failed' || event.status === 'cancelled') {
+              // setIsErrorModal(true); // Turn on if need in error modal. Update text in it to match both way of payment errors
+            }
+        }
+      };
+  
+      WebApp.onEvent('invoiceClosed', handleInvoiceClosed);
+  
+      await WebApp.openInvoice(
+        content.data.invoice.url,
+        (status: InvoiceStatus) => {
+          console.log('Invoice status:', status);
+          if (status === 'paid') {
+            void refetchContent();
+            setIsCongratsModal(true);
+          } else if (status === 'failed' || status === 'cancelled') {
+              // setIsErrorModal(true); // Turn on if need in error modal. Update text in it to match both way of payment errors
+          }
+        }
+      );
+  
+      return () => {
+        WebApp.offEvent('invoiceClosed', handleInvoiceClosed);
+      };
+    } catch (error) {
+      console.error('Payment failed:', error);
+      // setIsErrorModal(true); // Turn on if need in error modal. Update text in it to match both way of payment errors
+    }
+  }, [content, refetchContent]);
 
   const haveLicense = useMemo(() => {
     return content?.data?.have_licenses?.includes("listen") || content?.data?.have_licenses?.includes("resale")
@@ -126,31 +178,37 @@ export const ViewContentPage = () => {
         </section>
 
         <div className="mt-auto pb-2">
-        {!haveLicense && <Button
-              onClick={handleBuyContent}
-              className={"mb-4 h-[48px]"}
+        {!haveLicense && <div className="flex flex-row gap-4">
+          <Button
+              onClick={handleBuyContentTON}
+              className={"mb-4 h-[48px] px-2"}
               label={`Купить за ${fromNanoTON(content?.data?.encrypted?.license?.resale?.price)} ТОН`}
-              includeArrows={true}
+              includeArrows={content?.data?.invoice ? false : true}
           />
+          {content?.data?.invoice && (
+            <Button
+            onClick={handleBuyContentStars}
+            className={"mb-4 h-[48px] px-2"}
+            label={`Купить за ${content?.data?.invoice?.amount} ⭐️`}
+            />
+          )}
+          </div>
           }
-
-          {tonConnectUI.connected && (
-            <>
-              <Button
+          <Button
+            onClick={() => {
+              WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
+            }}
+            className={"h-[48px] bg-darkred"}
+            label={`Загрузить свой контент`}
+          />
+          {tonConnectUI.connected && (              
+            <Button
                 onClick={() => {
-                  WebApp.openTelegramLink(`https://t.me/MY_UploaderRobot`);
+                  tonConnectUI.disconnect();
                 }}
-                className={"h-[48px] bg-darkred"}
-                label={`Загрузить свой контент`}
-              />
-              <Button
-                  onClick={() => {
-                    tonConnectUI.disconnect();
-                  }}
-                  className={"h-[48px] bg-darkred mt-4"}
-                  label={`Отключить кошелек`}
-              />
-            </>
+                className={"h-[48px] bg-darkred mt-4"}
+                label={`Отключить кошелек`}
+            />
           )}
        </div>
       </main>

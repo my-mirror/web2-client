@@ -106,7 +106,7 @@ export const RoyaltyStep = ({ nextStep, prevStep }: RoyaltyStepProps) => {
       // First initialization with 100%
       setRoyalty([{
         address: Address.parse(tonConnectUI.account.address).toString({
-          bounceable: true,
+          bounceable: false,
           urlSafe: true,
           testOnly: false,
         }),
