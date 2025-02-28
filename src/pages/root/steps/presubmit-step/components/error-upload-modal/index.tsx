@@ -2,13 +2,13 @@ import { useHapticFeedback, useWebApp } from "@vkruglikov/react-telegram-web-app
 import { useEffect } from "react";
 import { Button } from "~/shared/ui/button";
 
-type DisclaimerModalProps = {
+type ErrorUploadProps = {
   onConfirm(): void;
 };
 
-export const DisclaimerModal = ({
+export const ErrorUploadModal = ({
   onConfirm,
-}: DisclaimerModalProps) => {
+}: ErrorUploadProps) => {
   const [impactOccurred] = useHapticFeedback();
   const WebApp = useWebApp();
   useEffect(() => {
@@ -47,25 +47,25 @@ export const DisclaimerModal = ({
                 Внимание!
               </p>
               <p>
-                MY снимает с себя ответственность за правомерность загрузки контента пользователем.
+                Произошла ошибка при загрузке видео.
               </p>
               <p className="flex flex-col">
                 <span className="tracking-[.25em] w-full">
-                    Сервис исходит из личной
+                    Загрузка не завершена
                 </span>
-                ответственности пользователя перед законом и третьими лицами. MY категорически не приемлет любые виды пиратства, но признает за Пользователем право принятия самостоятельных решений.
+                из-за технических проблем или превышения допустимых ограничений. Вы можете попробовать загрузить файл ещё раз или выбрать другой файл.
               </p>
               <p className="flex flex-col">
                 <span className="tracking-[.25em] w-full">
-                    Перед загрузкой контента
+                    Если проблема повторяется
                 </span>
-                 необходимо убедиться, что первые 30 секунд контента, которые будут использоваться для превью, не содержат материалов, нарушающих возрастное ограничение 18+
+                обратитесь в техническую поддержку сервиса MY, предоставив подробную информацию о загружаемом файле и возникшей ошибке.
               </p>
             </div>
         </div>
         <Button
           className={"mt-[20px] sticky bottom-0"}
-          label={"Принять и продолжить"}
+          label={"Понятно"}
           includeArrows={false}
           onClick={() => handleClick(onConfirm)}
         />

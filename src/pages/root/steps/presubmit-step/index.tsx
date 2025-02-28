@@ -2,7 +2,7 @@ import {
   useHapticFeedback,
   useWebApp,
 } from "@vkruglikov/react-telegram-web-app";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player/lazy";
 
 import { Button } from "~/shared/ui/button";
@@ -13,6 +13,7 @@ import { Progress } from "~/shared/ui/progress";
 import { useCreateNewContent } from "~/shared/services/content";
 import { BackButton } from "~/shared/ui/back-button";
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import { ErrorUploadModal } from "./components/error-upload-modal";
 
 
 
@@ -34,6 +35,20 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
   const uploadFile = useUploadFile();
 
   const createContent = useCreateNewContent();
+
+  const [isErrorUploadModal, setIsErrorUploadModal] = useState(false);
+
+  const handleErrorUploadModal = () => {
+    setIsErrorUploadModal(false);
+    uploadFile.resetUploadError();
+    uploadCover.resetUploadError();
+  };
+
+  useEffect(() => {
+    if (uploadFile.uploadError || uploadCover.uploadError) {
+      setIsErrorUploadModal(true);
+    }
+  }, [uploadFile.uploadError, uploadCover.uploadError]);
 
   const handleSubmit = async () => {
     try {
@@ -119,6 +134,11 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
 
   return (
       <section className={"mt-4 px-4 pb-8"}>
+        {isErrorUploadModal && (
+          <ErrorUploadModal
+          onConfirm={() => {
+            handleErrorUploadModal()}}
+          />)}
         <BackButton onClick={prevStep} />
 
         <div className={"mb-[30px] flex flex-col text-sm"}>
