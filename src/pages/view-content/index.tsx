@@ -44,7 +44,7 @@ export const ViewContentPage = () => {
       }
 
       const contentResponse = await purchaseContent({
-        content_address: content?.data?.encrypted?.cid,
+        content_address: WebApp.initDataUnsafe?.start_param,
         license_type: "resale",
       });
 
