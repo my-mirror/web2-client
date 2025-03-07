@@ -117,7 +117,8 @@ export const ViewContentPage = () => {
   }, [content, refetchContent]);
 
   const haveLicense = useMemo(() => {
-    return content?.data?.have_licenses?.includes("listen") || content?.data?.have_licenses?.includes("resale")
+    document.title = content?.data?.display_options?.metadata?.name;
+    return content?.data?.have_licenses?.includes("listen") || content?.data?.have_licenses?.includes("resale");
   }, [content])
 
   useEffect(() => {
