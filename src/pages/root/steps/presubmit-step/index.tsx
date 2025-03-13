@@ -99,21 +99,22 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
       });
 
       if (createContentResponse.data) {
-        const transactionResponse = await tonConnectUI.sendTransaction({
-          validUntil: Math.floor(Date.now() / 1000) + 120,
-          messages: [
-            {
-              amount: createContentResponse.data.amount,
-              address: createContentResponse.data.address,
-              payload: createContentResponse.data.payload,
-            },
-          ],
-        });
-
-        if (transactionResponse.boc) {
-          WebApp.close();
-        } else {
-          console.error("Transaction failed:", transactionResponse);
+        if (createContentResponse.data.address != null) {
+          const transactionResponse = await tonConnectUI.sendTransaction({
+            validUntil: Math.floor(Date.now() / 1000) + 120,
+            messages: [
+              {
+                amount: createContentResponse.data.amount,
+                address: createContentResponse.data.address,
+                payload: createContentResponse.data.payload,
+              },
+            ],
+          });
+          if (transactionResponse.boc) {
+            WebApp.close();
+          } else {
+            console.error("Transaction failed:", transactionResponse);
+          }
         }
       }
 
