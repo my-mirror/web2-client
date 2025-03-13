@@ -99,7 +99,7 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
       });
 
       if (createContentResponse.data) {
-        if (createContentResponse.data.address != null) {
+        if (createContentResponse.data.address != "free") {
           const transactionResponse = await tonConnectUI.sendTransaction({
             validUntil: Math.floor(Date.now() / 1000) + 120,
             messages: [
