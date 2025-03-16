@@ -24,6 +24,9 @@ type RootStore = {
   allowCover: boolean;
   setAllowCover: (allowCover: boolean) => void;
 
+  allowDwnld: boolean;
+  setAllowDwnld: (allowDwnld: boolean) => void;
+
   cover: File | null;
   setCover: (cover: File | null) => void;
 
@@ -68,6 +71,9 @@ export const useRootStore = create<RootStore>((set) => ({
   allowCover: false,
   setAllowCover: (allowCover) => set({ allowCover }),
 
+  allowDwnld: false,
+  setAllowDwnld: (allowDwnld) => set({ allowDwnld }),
+  
   cover: null,
   setCover: (cover) => set({ cover }),
 

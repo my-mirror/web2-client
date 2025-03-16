@@ -75,7 +75,7 @@ export const PresubmitStep = ({ prevStep }: PresubmitStepProps) => {
         // Откомментировать при условии того что вы принимаете много авторов
         // следует отметить что вы должны еще откомментровать AuthorsStep в RootPage
         // authors: rootStore.authors,
-
+        downloadable: rootStore.allowDwnld,
         content: fileUploadResult.content_id_v1,
         image: coverUploadResult.content_id_v1,
         price: String(rootStore.price * 10 ** 9),

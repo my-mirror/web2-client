@@ -14,6 +14,7 @@ type UseCreateNewContentPayload = {
   allowResale: boolean;
   authors: string[];
   royaltyParams: Royalty[];
+  downloadable: boolean;
 };
 
 export const useCreateNewContent = () => {

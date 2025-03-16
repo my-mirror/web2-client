@@ -165,6 +165,16 @@ export const DataStep = ({ nextStep }: DataStepProps) => {
         </FormLabel>
 
         <div className={"flex flex-col gap-2"}>
+        <FormLabel
+            label={"Разрешить скачивание"}
+            labelClassName={"flex"}
+            formLabelAddon={
+              <Checkbox
+                onClick={() => rootStore.setAllowDwnld(!rootStore.allowDwnld)}
+                checked={rootStore.allowDwnld}
+              />
+            }
+          />
           <FormLabel
             label={"Разрешить обложку"}
             labelClassName={"flex"}
