@@ -174,7 +174,7 @@ export const ViewContentPage = () => {
             const fileFormat = content?.data?.content_ext || '.raw';
             await WebApp.downloadFile({
                 url: fileUrl,
-                file_name: fileName + fileFormat,
+                file_name: fileName + '.' + fileFormat,
             });
         } catch (error) {
             console.error('Error downloading content:', error);
