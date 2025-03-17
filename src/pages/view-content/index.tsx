@@ -171,7 +171,7 @@ export const ViewContentPage = () => {
         try {
             const fileUrl = content?.data?.display_options?.content_url;
             const fileName = content?.data?.display_options?.metadata?.name || 'content';
-            const fileFormat = content?.data?.content_type?.contentFormat || '';
+            const fileFormat = content?.data?.content_ext || '.raw';
             await WebApp.downloadFile({
                 url: fileUrl,
                 file_name: fileName + fileFormat,
