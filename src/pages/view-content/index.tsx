@@ -232,7 +232,7 @@ export const ViewContentPage = () => {
                 {content?.data?.downloadable && (
                     <Button
                         onClick={() => handleDwnldContent()}
-                        className={'h-[48px] bg-darkred mb-4'}
+                        className={'h-[48px] mb-4'}
                         label={`Скачать контент`}
                     />
                 )}
